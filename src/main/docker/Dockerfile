@@ -18,14 +18,15 @@
 #
 # ffmpeg-docker dockerfile
 #
+# Sources :
+# - https://ffmpeg.org/download.html#releases
+# - https://trac.ffmpeg.org/wiki/CompilationGuide/Ubuntu
+#
 
 # From debian "stretch" image
 FROM debian:9
 
 # "Server" install without ffplay. Omit some dependencies.
-# Source :
-# - https://ffmpeg.org/download.html#releases
-# - https://trac.ffmpeg.org/wiki/CompilationGuide/Ubuntu
 RUN apt-get update                                                         && \
     apt-get -y install                                                        \
         autoconf                                                              \
@@ -55,18 +56,22 @@ RUN cd ~/ffmpeg_sources                                                         
     make                                                                                  && \
     make install
 
-# Compile dependencies about :
-# - libopus
-# - libaom (AV1 video encoder / decoder)
+# Compile libopus dependency
 RUN cd ~/ffmpeg_sources                                                                   && \
-    git -C opus pull 2> /dev/null || git clone --depth 1 https://github.com/xiph/opus.git && \
-    cd opus                                                                               && \
+    wget -O  opus-1.3.tar.gz https://github.com/xiph/opus/archive/v1.3.tar.gz             && \
+    tar xzvf opus-1.3.tar.gz                                                              && \
+    cd opus-1.3                                                                           && \
     ./autogen.sh                                                                          && \
     ./configure --prefix="$HOME/ffmpeg_build" --disable-shared                            && \
     make &&                                                                                  \
     make install
-RUN cd ~/ffmpeg_sources                                                                                                                                       && \
-    git -C aom pull 2> /dev/null || git clone --depth 1 https://aomedia.googlesource.com/aom                                                                  && \
+
+# Compile libaom dependency (AV1 video encoder / decoder)
+RUN cd ~/ffmpeg_sources                            && \
+    git clone https://aomedia.googlesource.com/aom
+RUN cd ~/ffmpeg_sources/aom                                                                                                                                   && \
+    git checkout v1.0.0                                                                                                                                       && \
+    cd ~/ffmpeg_sources                                                                                                                                       && \
     mkdir aom_build                                                                                                                                           && \
     cd aom_build                                                                                                                                              && \
     PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DENABLE_TESTS=0 -DENABLE_SHARED=off -DENABLE_NASM=on ../aom && \
