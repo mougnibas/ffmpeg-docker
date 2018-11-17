@@ -35,7 +35,7 @@ libswresample   3.  3.100
 libpostproc    55.  3.100
 ```
 
-The following libraries are compiled from sources :
+It also provide the following ones :
 
 ```
 libopus 1.3
