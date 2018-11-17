@@ -26,3 +26,23 @@ The purpose of this project is to provide ffmpeg onto docker.
 ## Misc
 
 Source encoding is UTF-8 (without BOM) with "LF" (unix) end of line characters.
+
+# Requirements
+
+* Maven 3.6.0
+* JDK 11.0.1
+* Windows 10 (amd64)
+* Docker 18.06.1-ce (or higher)
+   * it may be necessary to delete $HOME/.docker/config.json
+
+# Setup
+
+## Maven
+
+1) Set `JAVE_HOME` environment variable to point to the JDK install directory.
+1) Get and unzip maven.
+1) Add the `bin` maven directory to the user path.
+
+## Package
+
+`mvn clean package`
