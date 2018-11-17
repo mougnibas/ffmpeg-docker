@@ -62,7 +62,7 @@ RUN apt-get update                                                              
     make                                                                                  && \
     make install                                                                          && \
                                                                                              \
-   cd ~/ffmpeg_sources                                                                    && \
+    cd ~/ffmpeg_sources                                                                   && \
     wget -q -O  opus-1.3.tar.gz https://github.com/xiph/opus/archive/v1.3.tar.gz          && \
     tar xzvf opus-1.3.tar.gz                                                              && \
     cd opus-1.3                                                                           && \
