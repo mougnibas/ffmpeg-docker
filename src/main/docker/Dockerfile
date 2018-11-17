@@ -58,7 +58,7 @@ RUN cd ~/ffmpeg_sources                                                         
 
 # Compile libopus dependency
 RUN cd ~/ffmpeg_sources                                                                   && \
-    wget -O  opus-1.3.tar.gz https://github.com/xiph/opus/archive/v1.3.tar.gz             && \
+    wget -q -O  opus-1.3.tar.gz https://github.com/xiph/opus/archive/v1.3.tar.gz          && \
     tar xzvf opus-1.3.tar.gz                                                              && \
     cd opus-1.3                                                                           && \
     ./autogen.sh                                                                          && \
@@ -67,9 +67,9 @@ RUN cd ~/ffmpeg_sources                                                         
     make install
 
 # Compile libaom dependency (AV1 video encoder / decoder)
-RUN cd ~/ffmpeg_sources                            && \
-    git clone https://aomedia.googlesource.com/aom
-RUN cd ~/ffmpeg_sources/aom                                                                                                                                   && \
+RUN cd ~/ffmpeg_sources                                                                                                                                       && \
+    git clone https://aomedia.googlesource.com/aom                                                                                                            && \
+    cd aom                                                                                                                                                    && \
     git checkout v1.0.0                                                                                                                                       && \
     cd ~/ffmpeg_sources                                                                                                                                       && \
     mkdir aom_build                                                                                                                                           && \
@@ -80,7 +80,7 @@ RUN cd ~/ffmpeg_sources/aom                                                     
 
 # Compile ffmpeg
 RUN cd ~/ffmpeg_sources                                                                     && \
-    wget -O ffmpeg.tar.bz2 https://ffmpeg.org/releases/ffmpeg-4.1.tar.bz2                   && \
+    wget -q -O ffmpeg.tar.bz2 https://ffmpeg.org/releases/ffmpeg-4.1.tar.bz2                && \
     tar xjvf ffmpeg.tar.bz2                                                                 && \
     cd ffmpeg-4.1                                                                           && \
     PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure      \
