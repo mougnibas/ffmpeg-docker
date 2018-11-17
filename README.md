@@ -37,8 +37,10 @@ libpostproc    55.  3.100
 
 The following libraries are compiled from sources :
 
-* libopus
-* libaom (AV1 video encoder / decoder)
+```
+libopus 1.3
+libaom  1.0
+```
 
 ## Misc
 
