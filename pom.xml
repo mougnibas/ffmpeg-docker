@@ -65,7 +65,7 @@
 	<build>
 		<plugins>
 			<plugin>
-				<!-- Copy the Dockerfile and other stuff to the docker build context -->
+				<!-- Copy the Dockerfile to the docker build context -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
 				<executions>
@@ -78,7 +78,7 @@
 							<outputDirectory>${project.build.directory}/docker-build-context</outputDirectory>
 							<resources>
 								<resource>
-									<!-- Dockerfile, tarball, and so on -->
+									<!-- Dockerfile-->
 									<directory>${project.basedir}/src/main/docker/</directory>
 								</resource>
 							</resources>
