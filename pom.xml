@@ -139,50 +139,6 @@
 				</pluginManagement>
 			</build>
 		</profile>
-		<profile>
-			<!-- =========================================== -->
-			<!-- Check / Verification profile -->
-			<!-- Activated by default. -->
-			<!-- =========================================== -->
-			<id>check</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<!-- Enforce requirements. Can be debate. -->
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-enforcer-plugin</artifactId>
-						<executions>
-							<execution>
-								<goals>
-									<goal>enforce</goal>
-								</goals>
-								<phase>validate</phase>
-								<configuration>
-									<rules>
-										<requireMavenVersion>
-											<version>[3.6.0]</version>
-										</requireMavenVersion>
-										<requireJavaVersion>
-											<version>[11.0.1]</version>
-										</requireJavaVersion>
-										<requireOS>
-											<name>windows 10</name>
-											<version>10.0</version>
-											<family>windows</family>
-											<arch>amd64</arch>
-										</requireOS>
-										<reactorModuleConvergence />
-									</rules>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
 	</profiles>
 
 </project>
