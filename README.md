@@ -38,8 +38,8 @@ libpostproc    55.  3.100
 It also provide the following ones :
 
 ```
-libopus 1.3
-libaom  1.0
+libopus        1.3
+libaom         1.0
 ```
 
 ## Misc
