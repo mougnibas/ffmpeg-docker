@@ -62,6 +62,59 @@
 
 	</properties>
 
+	<build>
+		<plugins>
+			<plugin>
+				<!-- Copy the Dockerfile and other stuff to the docker build context -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/docker-build-context</outputDirectory>
+							<resources>
+								<resource>
+									<!-- Dockerfile, tarball, and so on -->
+									<directory>${project.basedir}/src/main/docker/</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<!-- Build the docker image -->
+						<id>docker-build</id>
+						<phase>package</phase>
+						<goals>
+							<goal>build</goal>
+						</goals>
+						<configuration>
+							<verbose>true</verbose>
+							<showLogs>true</showLogs>
+							<images>
+								<image>
+									<name>mougnibas/fr.mougnibas.ffmpeg-docker:%l</name>
+									<build>
+										<dockerFileDir>${project.build.directory}/docker-build-context</dockerFileDir>
+									</build>
+								</image>
+							</images>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
 	<profiles>
 		<profile>
 			<!-- =========================================== -->
