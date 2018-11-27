@@ -32,6 +32,7 @@ FROM debian:9
 # Install Yasm assembler (used by some library)
 # Compile libopus dependency
 # Compile libaom dependency (AV1 video encoder / decoder)
+# Compile libvpx dependency (VP8-VP9 encoder / decoder)
 # Compile ffmpeg
 # Install ffmpeg and ffprobe binary under /usr/local/bin
 # Remove sources and build directories
@@ -106,4 +107,13 @@ RUN apt-get update                                                              
     rm -Rf ~/ffmpeg_sources                                                               && \
     rm -Rf ~/bin                                                                          && \
                                                                                              \
-    hash -r
+    hash -r                                                                                  \
+                                                                                             \
+    cd ~/ffmpeg_sources                                                                   && \
+    git clone https://chromium.googlesource.com/webm/libvpx.git                           && \
+    cd libvpx                                                                             && \
+    git checkout v1.7.0                                                                   && \
+    cd ~/ffmpeg_sources                                                                   && \
+    PATH="$HOME/bin:$PATH" ./configure --prefix="$HOME/ffmpeg_build" --disable-examples --disable-unit-tests --enable-vp9-highbitdepth --as=yasm && \
+    PATH="$HOME/bin:$PATH" make                                                           && \
+    make install
