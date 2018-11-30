@@ -90,6 +90,15 @@ RUN cd ~/ffmpeg_sources                                                         
     make install                                                                          && \
     rm -R ~/ffmpeg_sources/libvpx*
 
+# Compile libx265 (H264 / HEVC)
+RUN apt-get install -y mercurial libnuma-dev                                              && \
+    cd ~/ffmpeg_sources                                                                   && \
+    hg clone https://bitbucket.org/multicoreware/x265                                     && \
+    cd x265/build/linux                                                                   && \
+    PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DENABLE_SHARED=off ../../source && \
+    PATH="$HOME/bin:$PATH" make                                                           && \
+    make install
+
 # Compile ffmpeg
 RUN cd ~/ffmpeg_sources                                                                   && \
     wget -q -O ffmpeg.tar.bz2 https://ffmpeg.org/releases/ffmpeg-4.1.tar.bz2              && \
@@ -105,7 +114,8 @@ RUN cd ~/ffmpeg_sources                                                         
         --enable-gpl                                                                         \
         --enable-libopus                                                                     \
         --enable-libaom                                                                      \
-        --enable-libvpx                                                                   && \
+        --enable-libvpx                                                                      \
+        --enable-libx265                                                                  && \
     PATH="$HOME/bin:$PATH" make                                                           && \
     make install
 
