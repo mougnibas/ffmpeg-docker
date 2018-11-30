@@ -41,6 +41,7 @@ It also provide the following ones :
 libopus        1.3
 libaom         1.0
 libvpx         1.7
+libx265        2.9
 ```
 
 ## Misc
