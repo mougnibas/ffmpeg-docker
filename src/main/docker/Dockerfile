@@ -91,10 +91,10 @@ RUN cd ~/ffmpeg_sources                                                         
     rm -R ~/ffmpeg_sources/libvpx*
 
 # Compile libx265 (H264 / HEVC)
-RUN apt-get install -y mercurial libnuma-dev                                              && \
-    cd ~/ffmpeg_sources                                                                   && \
-    hg clone https://bitbucket.org/multicoreware/x265                                     && \
-    cd x265/build/linux                                                                   && \
+RUN cd ~/ffmpeg_sources                                                                   && \
+    wget -q -O  x265_2.9.tar.gz http://ftp.videolan.org/pub/videolan/x265/x265_2.9.tar.gz && \
+    tar xzvf x265_2.9.tar.gz                                                              && \
+    cd x265_2.9/build/linux                                                               && \
     PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DENABLE_SHARED=off ../../source && \
     PATH="$HOME/bin:$PATH" make                                                           && \
     make install
