@@ -97,20 +97,28 @@
 						<goals>
 							<goal>build</goal>
 						</goals>
-						<configuration>
-							<verbose>true</verbose>
-							<showLogs>true</showLogs>
-							<images>
-								<image>
-									<name>mougnibas/ffmpeg:%l</name>
-									<build>
-										<dockerFileDir>${project.build.directory}/docker-build-context</dockerFileDir>
-									</build>
-								</image>
-							</images>
-						</configuration>
+					</execution>
+					<execution>
+						<!-- Push the docker image -->
+						<id>docker-push</id>
+						<phase>deploy</phase>
+						<goals>
+							<goal>push</goal>
+						</goals>
 					</execution>
 				</executions>
+				<configuration>
+					<verbose>true</verbose>
+					<showLogs>true</showLogs>
+					<images>
+						<image>
+							<name>mougnibas/ffmpeg:%l</name>
+							<build>
+								<dockerFileDir>${project.build.directory}/docker-build-context</dockerFileDir>
+							</build>
+						</image>
+					</images>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
