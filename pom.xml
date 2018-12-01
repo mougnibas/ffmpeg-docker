@@ -102,7 +102,7 @@
 							<showLogs>true</showLogs>
 							<images>
 								<image>
-									<name>mougnibas/fr.mougnibas.ffmpeg-docker:%l</name>
+									<name>mougnibas/ffmpeg:%l</name>
 									<build>
 										<dockerFileDir>${project.build.directory}/docker-build-context</dockerFileDir>
 									</build>
