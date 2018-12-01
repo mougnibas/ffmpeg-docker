@@ -23,8 +23,8 @@
 # - https://trac.ffmpeg.org/wiki/CompilationGuide/Ubuntu
 #
 
-# From debian "stretch" image
-FROM debian:9
+# From ubuntu 18.04 LTS image
+FROM ubuntu:18.04
 
 # "Server" install without ffplay. Omit some dependencies.
 RUN apt-get update                                                                        && \
@@ -57,7 +57,7 @@ RUN cd ~/ffmpeg_sources                                                         
     make install                                                                          && \
     rm -R ~/ffmpeg_sources/nasm-*
 
-# Compile libopus dependency (opus)
+# Compile libopus dependency (opus) from tarball
 RUN cd ~/ffmpeg_sources                                                                   && \
     wget -q -O  opus-1.3.tar.gz https://github.com/xiph/opus/archive/v1.3.tar.gz          && \
     tar xzvf opus-1.3.tar.gz                                                              && \
@@ -68,7 +68,7 @@ RUN cd ~/ffmpeg_sources                                                         
     make install                                                                          && \
     rm -R ~/ffmpeg_sources/opus*
 
-# Compile libaom dependency (AV1)
+# Compile libaom dependency (AV1) from git
 RUN cd ~/ffmpeg_sources                                                                   && \
     git clone https://aomedia.googlesource.com/aom                                        && \
     cd aom                                                                                && \
@@ -80,7 +80,7 @@ RUN cd ~/ffmpeg_sources                                                         
     make install                                                                          && \
     rm -R ~/ffmpeg_sources/aom*
 
-# Compile libvpx dependency (VP8-VP9)
+# Compile libvpx dependency (VP8-VP9) from git
 RUN cd ~/ffmpeg_sources                                                                   && \
     git clone https://chromium.googlesource.com/webm/libvpx.git                           && \
     cd libvpx                                                                             && \
@@ -90,16 +90,17 @@ RUN cd ~/ffmpeg_sources                                                         
     make install                                                                          && \
     rm -R ~/ffmpeg_sources/libvpx*
 
-# Compile libx265 (H264 / HEVC)
+# Compile libx265 (H264 / HEVC) from tarball
 RUN cd ~/ffmpeg_sources                                                                   && \
     wget -q -O  x265_2.9.tar.gz http://ftp.videolan.org/pub/videolan/x265/x265_2.9.tar.gz && \
     tar xzvf x265_2.9.tar.gz                                                              && \
     cd x265_2.9/build/linux                                                               && \
     PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DENABLE_SHARED=off ../../source && \
     PATH="$HOME/bin:$PATH" make                                                           && \
-    make install
+    make install                                                                          && \
+    rm -R ~/ffmpeg_sources/x265*
 
-# Compile ffmpeg
+# Compile ffmpeg from tarball
 RUN cd ~/ffmpeg_sources                                                                   && \
     wget -q -O ffmpeg.tar.bz2 https://ffmpeg.org/releases/ffmpeg-4.1.tar.bz2              && \
     tar xjvf ffmpeg.tar.bz2                                                               && \
