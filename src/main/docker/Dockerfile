@@ -27,6 +27,17 @@
 FROM ubuntu:18.04
 
 # "Server" install without ffplay. Omit some dependencies.
+# Put source directory to home directory
+# Install YASM assembler (used by some library)
+# Install NASM assembler (used by some library)
+# Compile libopus dependency (opus) from tarball
+# Compile libaom dependency (AV1) from git
+# Compile libvpx dependency (VP8-VP9) from git
+# Compile libx265 (H264 / HEVC) from tarball
+# Compile ffmpeg from tarball
+# Install ffmpeg and ffprobe binary under /usr/local/bin
+# Remove sources and build directories
+# "forget" commands
 RUN apt-get update                                                                        && \
     apt-get -y install                                                                       \
         autoconf                                                                             \
@@ -38,16 +49,13 @@ RUN apt-get update                                                              
         pkg-config                                                                           \
         texinfo                                                                              \
         wget                                                                                 \
-        zlib1g-dev
-
-# Put source directory to home directory
-RUN mkdir -p ~/ffmpeg_sources ~/bin
-
-# Install YASM assembler (used by some library)
-RUN apt-get install -y yasm
-
-# Install NASM assembler (used by some library)
-RUN cd ~/ffmpeg_sources                                                                   && \
+        zlib1g-dev                                                                        && \
+                                                                                             \
+    mkdir -p ~/ffmpeg_sources ~/bin                                                       && \
+                                                                                             \
+    apt-get install -y yasm                                                               && \
+                                                                                             \
+    cd ~/ffmpeg_sources                                                                   && \
     wget https://www.nasm.us/pub/nasm/releasebuilds/2.13.03/nasm-2.13.03.tar.bz2          && \
     tar xjvf nasm-2.13.03.tar.bz2                                                         && \
     cd nasm-2.13.03                                                                       && \
@@ -55,10 +63,9 @@ RUN cd ~/ffmpeg_sources                                                         
     PATH="$HOME/bin:$PATH" ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" && \
     make                                                                                  && \
     make install                                                                          && \
-    rm -R ~/ffmpeg_sources/nasm-*
-
-# Compile libopus dependency (opus) from tarball
-RUN cd ~/ffmpeg_sources                                                                   && \
+    rm -R ~/ffmpeg_sources/nasm-*                                                         && \
+                                                                                             \
+    cd ~/ffmpeg_sources                                                                   && \
     wget -q -O  opus-1.3.tar.gz https://github.com/xiph/opus/archive/v1.3.tar.gz          && \
     tar xzvf opus-1.3.tar.gz                                                              && \
     cd opus-1.3                                                                           && \
@@ -66,10 +73,9 @@ RUN cd ~/ffmpeg_sources                                                         
     ./configure --prefix="$HOME/ffmpeg_build" --disable-shared                            && \
     make                                                                                  && \
     make install                                                                          && \
-    rm -R ~/ffmpeg_sources/opus*
-
-# Compile libaom dependency (AV1) from git
-RUN cd ~/ffmpeg_sources                                                                   && \
+    rm -R ~/ffmpeg_sources/opus*                                                          && \
+                                                                                             \
+    cd ~/ffmpeg_sources                                                                   && \
     git clone https://aomedia.googlesource.com/aom                                        && \
     cd aom                                                                                && \
     git checkout v1.0.0                                                                   && \
@@ -78,32 +84,27 @@ RUN cd ~/ffmpeg_sources                                                         
     PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DENABLE_TESTS=0 -DENABLE_SHARED=off -DENABLE_NASM=on ../aom && \
     PATH="$HOME/bin:$PATH" make                                                           && \
     make install                                                                          && \
-    rm -R ~/ffmpeg_sources/aom*
-
-# Compile libvpx dependency (VP8-VP9) from git
-RUN cd ~/ffmpeg_sources                                                                   && \
+    rm -R ~/ffmpeg_sources/aom*                                                           && \
+                                                                                             \
+    cd ~/ffmpeg_sources                                                                   && \
     git clone https://chromium.googlesource.com/webm/libvpx.git                           && \
     cd libvpx                                                                             && \
     git checkout v1.7.0                                                                   && \
     PATH="$HOME/bin:$PATH" ./configure --prefix="$HOME/ffmpeg_build" --disable-examples --disable-unit-tests --enable-vp9-highbitdepth --as=yasm && \
     PATH="$HOME/bin:$PATH" make                                                           && \
     make install                                                                          && \
-    rm -R ~/ffmpeg_sources/libvpx*
-
-# Compile libx265 (H264 / HEVC) from tarball
-RUN cd ~/ffmpeg_sources                                                                   && \
+    rm -R ~/ffmpeg_sources/libvpx*                                                        && \
+                                                                                             \
+    cd ~/ffmpeg_sources                                                                   && \
     wget -q -O  x265_2.9.tar.gz http://ftp.videolan.org/pub/videolan/x265/x265_2.9.tar.gz && \
     tar xzvf x265_2.9.tar.gz                                                              && \
     cd x265_2.9/build/linux                                                               && \
     PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DENABLE_SHARED=off ../../source && \
     PATH="$HOME/bin:$PATH" make                                                           && \
     make install                                                                          && \
-    rm -R ~/ffmpeg_sources/x265*
-
-# Compile ffmpeg from tarball
-# Install ffmpeg and ffprobe binary under /usr/local/bin
-# Remove sources and build directories
-RUN cd ~/ffmpeg_sources                                                                   && \
+    rm -R ~/ffmpeg_sources/x265*                                                          && \
+                                                                                             \
+    cd ~/ffmpeg_sources                                                                   && \
     wget -q -O ffmpeg.tar.bz2 https://ffmpeg.org/releases/ffmpeg-4.1.tar.bz2              && \
     tar xjvf ffmpeg.tar.bz2                                                               && \
     cd ffmpeg-4.1                                                                         && \
@@ -125,7 +126,20 @@ RUN cd ~/ffmpeg_sources                                                         
     cp ~/bin/ffprobe /usr/local/bin                                                       && \
     rm -Rf ~/ffmpeg_build                                                                 && \
     rm -Rf ~/ffmpeg_sources                                                               && \
-    rm -Rf ~/bin
-
-# "forget" commands
-RUN hash -r
+    rm -Rf ~/bin                                                                          && \
+                                                                                             \
+    apt-get remove -y                                                                        \
+        autoconf                                                                             \
+        automake                                                                             \
+        build-essential                                                                      \
+        cmake                                                                                \
+        git-core                                                                             \
+        libtool                                                                              \
+        pkg-config                                                                           \
+        texinfo                                                                              \
+        wget                                                                                 \
+        zlib1g-dev                                                                        && \
+    apt-get autoremove -y                                                                 && \
+    apt-get purge                                                                         && \
+                                                                                             \
+    hash -r
