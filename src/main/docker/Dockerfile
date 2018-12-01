@@ -101,6 +101,8 @@ RUN cd ~/ffmpeg_sources                                                         
     rm -R ~/ffmpeg_sources/x265*
 
 # Compile ffmpeg from tarball
+# Install ffmpeg and ffprobe binary under /usr/local/bin
+# Remove sources and build directories
 RUN cd ~/ffmpeg_sources                                                                   && \
     wget -q -O ffmpeg.tar.bz2 https://ffmpeg.org/releases/ffmpeg-4.1.tar.bz2              && \
     tar xjvf ffmpeg.tar.bz2                                                               && \
@@ -118,14 +120,10 @@ RUN cd ~/ffmpeg_sources                                                         
         --enable-libvpx                                                                      \
         --enable-libx265                                                                  && \
     PATH="$HOME/bin:$PATH" make                                                           && \
-    make install
-
-# Install ffmpeg and ffprobe binary under /usr/local/bin
-RUN cp ~/bin/ffmpeg  /usr/local/bin                                                       && \
-    cp ~/bin/ffprobe /usr/local/bin
-
-# Remove sources and build directories
-RUN rm -Rf ~/ffmpeg_build                                                                 && \
+    make install                                                                          && \
+    cp ~/bin/ffmpeg  /usr/local/bin                                                       && \
+    cp ~/bin/ffprobe /usr/local/bin                                                       && \
+    rm -Rf ~/ffmpeg_build                                                                 && \
     rm -Rf ~/ffmpeg_sources                                                               && \
     rm -Rf ~/bin
 
