@@ -42,6 +42,7 @@ libopus        1.3
 libaom         1.0
 libvpx         1.7
 libx265        3.0
+libfdk_aac     2.0.0
 ```
 
 ## Misc
