@@ -33,7 +33,7 @@ FROM ubuntu:18.04
 # Compile libopus dependency (opus) from tarball
 # Compile libaom dependency (AV1) from git
 # Compile libvpx dependency (VP8-VP9) from git
-# Compile libx265 (H264 / HEVC) from tarball
+# Compile libx265 (H265 / HEVC) from tarball
 # Compile ffmpeg from tarball
 # Install ffmpeg and ffprobe binary under /usr/local/bin
 # Remove sources and build directories
@@ -96,9 +96,9 @@ RUN apt-get update                                                              
     rm -R ~/ffmpeg_sources/libvpx*                                                        && \
                                                                                              \
     cd ~/ffmpeg_sources                                                                   && \
-    wget -q -O  x265_2.9.tar.gz http://ftp.videolan.org/pub/videolan/x265/x265_2.9.tar.gz && \
-    tar xzvf x265_2.9.tar.gz                                                              && \
-    cd x265_2.9/build/linux                                                               && \
+    wget -q -O  x265_3.0.tar.gz http://ftp.videolan.org/pub/videolan/x265/x265_3.0.tar.gz && \
+    tar xzvf x265_3.0.tar.gz                                                              && \
+    cd x265_3.0/build/linux                                                               && \
     PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DENABLE_SHARED=off ../../source && \
     PATH="$HOME/bin:$PATH" make                                                           && \
     make install                                                                          && \
