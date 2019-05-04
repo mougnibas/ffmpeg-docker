@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- © Copyright 2017-2018 Yoann MOUGNIBAS -->
 
-<!-- This file is part of Cook-Helper. -->
+<!-- This file is part of ffmpeg-docker. -->
 
-<!-- Cook-Helper is free software: you can redistribute it and/or modify -->
+<!-- ffmpeg-docker is free software: you can redistribute it and/or modify -->
 <!-- it under the terms of the GNU General Public License as published by -->
 <!-- the Free Software Foundation, either version 3 of the License, or -->
 <!-- (at your option) any later version. -->
 
-<!-- Cook-Helper is distributed in the hope that it will be useful, -->
+<!-- ffmpeg-docker is distributed in the hope that it will be useful, -->
 <!-- but WITHOUT ANY WARRANTY; without even the implied warranty of -->
 <!-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the -->
 <!-- GNU General Public License for more details. -->
 
 <!-- You should have received a copy of the GNU General Public License -->
-<!-- along with Cook-Helper. If not, see <http://www.gnu.org/licenses/> -->
+<!-- along with ffmpeg-docker. If not, see <http://www.gnu.org/licenses/> -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0           http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -25,13 +25,13 @@
 	<parent>
 		<groupId>fr.mougnibas.base-maven</groupId>
 		<artifactId>base-maven</artifactId>
-		<version>1.0.1</version>
+		<version>1.0.2</version>
 	</parent>
 
 	<!-- Project ID -->
 	<groupId>fr.mougnibas.ffmpeg-docker</groupId>
 	<artifactId>ffmpeg-docker</artifactId>
-	<version>1.2.0-SNAPSHOT</version>
+	<version>1.3.0</version>
 	<packaging>pom</packaging>
 
 	<!-- General informations -->
@@ -40,14 +40,14 @@
 	<inceptionYear>2018</inceptionYear>
 
 	<scm>
-		<connection>scm:git:https://github.com/mougnibas/ffmpeg-docker.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com:mougnibas/ffmpeg-docker.git</developerConnection>
+		<connection>scm:git:https://gitlab.com/mougnibas/ffmpeg-docker.git</connection>
+		<developerConnection>scm:git:ssh://git@gitlab.com:mougnibas/ffmpeg-docker.git</developerConnection>
 	</scm>
 
 	<properties>
 
-		<!-- Same java level for both source and target : Java 11 -->
-		<maven.compiler.release>11</maven.compiler.release>
+		<!-- Same java level for both source and target : Java 12 -->
+		<maven.compiler.release>12</maven.compiler.release>
 
 		<!-- File encoding is UTF-8 -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -122,31 +122,5 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<profiles>
-		<profile>
-			<!-- =========================================== -->
-			<!-- Common configuration profile -->
-			<!-- Activated by default. -->
-			<!-- =========================================== -->
-			<id>common-configuration</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<build>
-				<pluginManagement>
-					<plugins>
-						<!-- Third party plugins -->
-						<plugin>
-							<!-- https://dmp.fabric8.io/ -->
-							<groupId>io.fabric8</groupId>
-							<artifactId>docker-maven-plugin</artifactId>
-							<version>0.27.2</version>
-						</plugin>
-					</plugins>
-				</pluginManagement>
-			</build>
-		</profile>
-	</profiles>
 
 </project>
