@@ -51,11 +51,9 @@ Source encoding is UTF-8 (without BOM) with "LF" (unix) end of line characters.
 
 # Requirements
 
-* Maven 3.6.0
-* JDK 11.0.1
-* Windows 10 (amd64)
-* Docker 18.06.1-ce (or higher)
-   * it may be necessary to delete $HOME/.docker/config.json
+* Maven 3.6.1
+* OpenJDK 12
+* Docker 18.09.02 (or higher)
 
 # Setup
 
