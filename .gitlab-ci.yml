@@ -18,7 +18,7 @@
 # =============================
 # Base image used in gitlab-ci
 # =============================
-image: mougnibas/gitlab-ci-docker:latest
+image: mougnibas/ci:latest
 
 # ===========================
 # Maven and Docker variables
