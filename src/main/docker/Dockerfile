@@ -34,7 +34,6 @@ FROM ubuntu:18.04
 # Compile libaom dependency (AV1) from git
 # Compile libvpx dependency (VP8-VP9) from git
 # Compile libx265 (H265 / HEVC) from tarball
-# Compile libfdk_aac from tarball
 # Compile ffmpeg from tarball
 # Install ffmpeg and ffprobe binary under /usr/local/bin
 # Remove sources and build directories
@@ -106,16 +105,6 @@ RUN apt-get update                                                              
     rm -R ~/ffmpeg_sources/x265*                                                          && \
                                                                                              \
     cd ~/ffmpeg_sources                                                                   && \
-    wget -q -O  v2.0.0.tar.gz https://github.com/mstorsjo/fdk-aac/archive/v2.0.0.tar.gz   && \
-    tar xzvf v2.0.0.tar.gz                                                                && \
-    cd fdk-aac-2.0.0                                                                      && \
-    autoreconf -fiv                                                                       && \
-    ./configure --prefix="$HOME/ffmpeg_build" --disable-shared                            && \
-    make                                                                                  && \
-    make install                                                                          && \
-    rm -R ~/ffmpeg_sources/fdk-aac-*                                                      && \
-                                                                                             \
-    cd ~/ffmpeg_sources                                                                   && \
     wget -q -O ffmpeg.tar.bz2 https://ffmpeg.org/releases/ffmpeg-4.1.tar.bz2              && \
     tar xjvf ffmpeg.tar.bz2                                                               && \
     cd ffmpeg-4.1                                                                         && \
@@ -127,12 +116,10 @@ RUN apt-get update                                                              
         --extra-libs="-lpthread -lm"                                                         \
         --bindir="$HOME/bin"                                                                 \
         --enable-gpl                                                                         \
-        --enable-nonfree                                                                     \
         --enable-libopus                                                                     \
         --enable-libaom                                                                      \
         --enable-libvpx                                                                      \
-        --enable-libx265                                                                     \
-        --enable-libfdk-aac                                                               && \
+        --enable-libx265                                                                  && \
     PATH="$HOME/bin:$PATH" make                                                           && \
     make install                                                                          && \
     cp ~/bin/ffmpeg  /usr/local/bin                                                       && \
