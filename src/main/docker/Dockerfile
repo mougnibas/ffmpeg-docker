@@ -33,6 +33,7 @@ FROM ubuntu:18.04
 # Compile libopus dependency (opus) from tarball
 # Compile libaom dependency (AV1) from git
 # Compile libvpx dependency (VP8-VP9) from git
+# Compile libx264 (H264 / AVC) from git
 # Compile libx265 (H265 / HEVC) from tarball
 # Compile ffmpeg from tarball
 # Install ffmpeg and ffprobe binary under /usr/local/bin
@@ -56,7 +57,8 @@ RUN apt-get update                                                              
     apt-get install -y yasm                                                               && \
                                                                                              \
     cd ~/ffmpeg_sources                                                                   && \
-    wget https://www.nasm.us/pub/nasm/releasebuilds/2.13.03/nasm-2.13.03.tar.bz2          && \
+    wget --no-check-certificate                                                              \
+        https://www.nasm.us/pub/nasm/releasebuilds/2.13.03/nasm-2.13.03.tar.bz2           && \
     tar xjvf nasm-2.13.03.tar.bz2                                                         && \
     cd nasm-2.13.03                                                                       && \
     ./autogen.sh                                                                          && \
@@ -96,6 +98,15 @@ RUN apt-get update                                                              
     rm -R ~/ffmpeg_sources/libvpx*                                                        && \
                                                                                              \
     cd ~/ffmpeg_sources                                                                   && \
+    git clone https://code.videolan.org/videolan/x264.git                                 && \
+    cd x264                                                                               && \
+    git checkout stable                                                                   && \
+    PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" --enable-static --enable-pic && \
+    PATH="$HOME/bin:$PATH" make                                                           && \
+    make install                                                                          && \
+    rm -R ~/ffmpeg_sources/x264*                                                          && \
+                                                                                             \
+    cd ~/ffmpeg_sources                                                                   && \
     wget -q -O  x265_3.0.tar.gz http://ftp.videolan.org/pub/videolan/x265/x265_3.0.tar.gz && \
     tar xzvf x265_3.0.tar.gz                                                              && \
     cd x265_3.0/build/linux                                                               && \
@@ -119,6 +130,7 @@ RUN apt-get update                                                              
         --enable-libopus                                                                     \
         --enable-libaom                                                                      \
         --enable-libvpx                                                                      \
+        --enable-libx264                                                                     \
         --enable-libx265                                                                  && \
     PATH="$HOME/bin:$PATH" make                                                           && \
     make install                                                                          && \
