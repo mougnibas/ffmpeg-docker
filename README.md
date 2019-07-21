@@ -41,6 +41,7 @@ It also provide the following ones :
 libopus        1.3
 libaom         1.0
 libvpx         1.7
+libx264        stable (r2945 72db437)
 libx265        3.0
 ```
 
