@@ -99,5 +99,4 @@ deploy:
     - docker login --username $CI_DOCKERHUB_REGISTRY_USER --password $CI_DOCKERHUB_REGISTRY_PASSWORD
     - mvn $MAVEN_CLI_OPTS deploy
   only:
-    - master
     - tags
