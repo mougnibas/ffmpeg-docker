@@ -22,17 +22,17 @@ along with ffmpeg-docker. If not, see <http://www.gnu.org/licenses/>
 ## General
 
 The purpose of this project is to provide ffmpeg onto docker.
-ffmpeg release is 4.1 'al-Khwarizmi', released 2018-11-06, with the following library versions :
+ffmpeg release is 4.2 'Ada', released 2019-08-05, with the following library versions :
 
 ```
-libavutil      56. 22.100
-libavcodec     58. 35.100
-libavformat    58. 20.100
-libavdevice    58.  5.100
-libavfilter     7. 40.101
-libswscale      5.  3.100
-libswresample   3.  3.100
-libpostproc    55.  3.100
+libavutil      56. 31.100
+libavcodec     58. 54.100
+libavformat    58. 29.100
+libavdevice    58.  8.100
+libavfilter     7. 57.101
+libswscale      5.  5.100
+libswresample   3.  5.100
+libpostproc    55.  5.100
 ```
 
 It also provide the following ones :
@@ -42,7 +42,7 @@ libopus        1.3
 libaom         1.0
 libvpx         1.7
 libx264        stable (r2945 72db437)
-libx265        3.0
+libx265        3.1.2
 ```
 
 ## Misc
