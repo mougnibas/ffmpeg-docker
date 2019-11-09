@@ -22,27 +22,29 @@ along with ffmpeg-docker. If not, see <http://www.gnu.org/licenses/>
 ## General
 
 The purpose of this project is to provide ffmpeg onto docker.
-ffmpeg release is 4.2 'Ada', released 2019-08-05, with the following library versions :
+
+ffmpeg release is 4.2.1 'Ada', released 2019-10-05, with the following 'native' library versions :
 
 ```
-libavutil      56. 31.100
+libavutil      56. 31.00
 libavcodec     58. 54.100
 libavformat    58. 29.100
 libavdevice    58.  8.100
-libavfilter     7. 57.101
+libavfilter     7. 57.100
 libswscale      5.  5.100
 libswresample   3.  5.100
 libpostproc    55.  5.100
 ```
 
-It also provide the following ones :
+It also provide the following external ones :
 
 ```
-libopus        1.3
-libaom         1.0
-libvpx         1.7
-libx264        stable (r2945 72db437)
-libx265        3.1.2
+libopus          1.3
+libaom           1.0
+libvpx           1.7
+libx264          stable (r2945 72db437)
+libx265          3.2
+libzimg (zscale) 2.9.2
 ```
 
 ## Misc
@@ -53,7 +55,7 @@ Source encoding is UTF-8 (without BOM) with "LF" (unix) end of line characters.
 
 * Maven 3.6.1
 * OpenJDK 12
-* Docker 18.09.02 (or higher)
+* Docker 19.03.04 (or higher)
 
 # Setup
 

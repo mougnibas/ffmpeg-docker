@@ -107,20 +107,29 @@ RUN apt-get update                                                              
     rm -R ~/ffmpeg_sources/x264*                                                          && \
                                                                                              \
     cd ~/ffmpeg_sources                                                                   && \
-    wget -q -O x265.tar.gz https://bitbucket.org/multicoreware/x265/downloads/x265_3.1.2.tar.gz && \
-    tar xzvf x265.tar.gz                                                                  && \
-    cd x265_3.1.2/build/linux                                                             && \
-    PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DENABLE_SHARED=off -DHIGH_BIT_DEPTH=ON ../../source && \
+    wget -q -O  x265_3.2.tar.gz http://ftp.videolan.org/pub/videolan/x265/x265_3.2.tar.gz && \
+    tar xzvf x265_3.2.tar.gz                                                              && \
+    cd x265_3.2/build/linux                                                               && \
+    PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DENABLE_SHARED=off ../../source && \
     PATH="$HOME/bin:$PATH" make                                                           && \
     make install                                                                          && \
+    rm -R ~/ffmpeg_sources/x265*                                                          && \
                                                                                              \
     cd ~/ffmpeg_sources                                                                   && \
-    wget -q -O ffmpeg.tar.bz2 https://ffmpeg.org/releases/ffmpeg-4.2.tar.bz2              && \
+    wget -q -O zimg.tar.gz https://github.com/sekrit-twc/zimg/archive/release-2.9.2.tar.gz && \
+    tar xzvf zimg.tar.gz                                                                  && \
+    cd zimg-release-2.9.2                                                                 && \
+    ./autogen.sh                                                                          && \
+    PATH="$HOME/bin:$PATH" ./configure --prefix="$HOME/ffmpeg_build" --disable-shared --enable-static  && \
+    PATH="$HOME/bin:$PATH" make                                                           && \
+    make install                                                                          && \
+    rm -R ~/ffmpeg_sources/zimg-release-*                                                 && \
+                                                                                             \
+    cd ~/ffmpeg_sources                                                                   && \
+    wget -q -O ffmpeg.tar.bz2 https://ffmpeg.org/releases/ffmpeg-4.2.1.tar.bz2            && \
     tar xjvf ffmpeg.tar.bz2                                                               && \
-    cd ffmpeg-4.2                                                                         && \
-    export PATH="$HOME/bin:$PATH"                                                         && \
-    export PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig"                             && \
-    ./configure                                                                              \
+    cd ffmpeg-4.2.1                                                                       && \
+    PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure    \
         --prefix="$HOME/ffmpeg_build"                                                        \
         --pkg-config-flags="--static"                                                        \
         --extra-cflags="-I$HOME/ffmpeg_build/include"                                        \
@@ -132,7 +141,8 @@ RUN apt-get update                                                              
         --enable-libaom                                                                      \
         --enable-libvpx                                                                      \
         --enable-libx264                                                                     \
-        --enable-libx265                                                                  && \
+        --enable-libx265                                                                     \
+        --enable-libzimg                                                                  && \
     PATH="$HOME/bin:$PATH" make                                                           && \
     make install                                                                          && \
     cp ~/bin/ffmpeg  /usr/local/bin                                                       && \
