@@ -43,7 +43,7 @@ libopus          1.3
 libaom           1.0
 libvpx           1.7
 libx264          stable (r2945 72db437)
-libx265          3.2
+libx265          3.2.1
 libzimg (zscale) 2.9.2
 ```
 
@@ -56,6 +56,8 @@ Source encoding is UTF-8 (without BOM) with "LF" (unix) end of line characters.
 * Maven 3.6.1
 * OpenJDK 12
 * Docker 19.03.04 (or higher)
+  * On Windows system, enable 'Expose daemon on tcp://localhost:2375 without TLS'
+    and set 'DOCKER_HOST=tcp://localhost:237' environment variable
 
 # Setup
 
