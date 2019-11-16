@@ -51,22 +51,27 @@ libzimg (zscale) 2.9.2
 
 Source encoding is UTF-8 (without BOM) with "LF" (unix) end of line characters.
 
-# Requirements
+# Build
 
-* Maven 3.6.1
-* OpenJDK 12
+## Requirements
+
+* git client
 * Docker 19.03.04 (or higher)
-  * On Windows system, enable 'Expose daemon on tcp://localhost:2375 without TLS'
-    and set 'DOCKER_HOST=tcp://localhost:237' environment variable
 
-# Setup
+## Source clone
 
-## Maven
+`git clone https://github.com/mougnibas/ffmpeg-docker.git`
 
-1) Set `JAVE_HOME` environment variable to point to the JDK install directory.
-1) Get and unzip maven.
-1) Add the `bin` maven directory to the user path.
+## Docker build
 
-## Package
+```
+cd ffmpeg-docker
+docker build src/main/docker/
+```
 
-`mvn clean package`
+# Usage
+
+
+## TODO
+
+TODO
