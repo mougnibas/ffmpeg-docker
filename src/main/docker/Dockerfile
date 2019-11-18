@@ -18,36 +18,45 @@
 #
 # ffmpeg-docker dockerfile
 #
-# Sources :
+# References :
 # - https://ffmpeg.org/download.html#releases
 # - https://trac.ffmpeg.org/wiki/CompilationGuide/Ubuntu
-#
-
-# From ubuntu 18.04 LTS as base image
-FROM ubuntu:18.04 AS base
+# - https://bitbucket.org/multicoreware/x265/wiki/Home
+# - https://github.com/jrottenberg/ffmpeg
+# - https://docs.docker.com/develop/develop-images/multistage-build/
 
 # ==============================================================================
-# /!\ BUILD ONLY /!\
+# /!\ BUILD STAGE ONLY /!\
 # 
-# Build the source from the base image
+# Build sources.
 # 
 # Don't optimize layer count or layer size here.
-# Focus on maintenability first.
+# Focus on maintenability.
 # ==============================================================================
-FROM base AS build
+FROM ubuntu:18.04 AS builder
+
+# Set library URLs
+ARG NASM_URL=https://www.nasm.us/pub/nasm/releasebuilds/2.13.03/nasm-2.13.03.tar.bz2
+ARG ZIMG_URL=https://github.com/sekrit-twc/zimg/archive/release-2.9.2.tar.gz
+ARG OPUS_URL=https://github.com/xiph/opus/archive/v1.3.tar.gz
+ARG AOM_URL=https://aomedia.googlesource.com/aom
+ARG VPX_URL=https://chromium.googlesource.com/webm/libvpx.git
+ARG X264_URL=https://code.videolan.org/videolan/x264.git
+ARG X265_URL=https://bitbucket.org/multicoreware/x265/downloads/x265_3.2.1.tar.gz
+ARG FFMPEG_URL=https://ffmpeg.org/releases/ffmpeg-4.2.1.tar.bz2
 
 # "Server" install without ffplay. Omit some dependencies.
-RUN apt-get update                                                                        && \
-    apt-get -y install                                                                       \
-        autoconf                                                                             \
-        automake                                                                             \
-        build-essential                                                                      \
-        cmake                                                                                \
-        git-core                                                                             \
-        libtool                                                                              \
-        pkg-config                                                                           \
-        texinfo                                                                              \
-        wget                                                                                 \
+RUN apt-get update                                                          && \
+    apt-get -y install                                                         \
+        autoconf                                                               \
+        automake                                                               \
+        build-essential                                                        \
+        cmake                                                                  \
+        git-core                                                               \
+        libtool                                                                \
+        pkg-config                                                             \
+        texinfo                                                                \
+        wget                                                                   \
         zlib1g-dev
 
 # Put source directory to home directory
@@ -57,105 +66,112 @@ RUN mkdir -p ~/ffmpeg_sources ~/bin
 RUN apt-get install -y yasm
 
 # Compile and install NASM assembler (used by some library)
-RUN cd ~/ffmpeg_sources                                                                   && \
-    wget --no-check-certificate                                                              \
-        https://www.nasm.us/pub/nasm/releasebuilds/2.13.03/nasm-2.13.03.tar.bz2           && \
-    tar xjvf nasm-2.13.03.tar.bz2                                                         && \
-    cd nasm-2.13.03                                                                       && \
-    ./autogen.sh                                                                          && \
-    PATH="$HOME/bin:$PATH" ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" && \
-    make                                                                                  && \
+RUN cd ~/ffmpeg_sources                                                     && \
+    wget -O nasm.tar.bz2 --no-check-certificate ${NASM_URL}                 && \
+    tar xjf nasm.tar.bz2                                                    && \
+    cd nasm-*                                                               && \
+    ./autogen.sh                                                            && \
+    ./configure                                                             && \
+    make                                                                    && \
     make install
 
 # Compile and install libzimg (zscale)
-RUN cd ~/ffmpeg_sources                                                                   && \
-    wget -q -O z.tar.gz https://github.com/sekrit-twc/zimg/archive/release-2.9.2.tar.gz   && \
-    tar xzvf z.tar.gz                                                                     && \
-    cd zimg-release-*                                                                     && \
-    ./autogen.sh                                                                          && \
-    PATH="$HOME/bin:$PATH" ./configure --prefix="$HOME/ffmpeg_build" --disable-shared --enable-static  && \
-    PATH="$HOME/bin:$PATH" make                                                           && \
+RUN cd ~/ffmpeg_sources                                                     && \
+    wget -q -O zimg.tar.gz ${ZIMG_URL}                                      && \
+    tar xzf zimg.tar.gz                                                     && \
+    cd zimg-release-*                                                       && \
+    ./autogen.sh                                                            && \
+    ./configure                                                                \
+        --disable-shared                                                       \
+        --enable-static                                                     && \
+    make                                                                    && \
     make install
 
-# Compile and install libopus dependency (opus) from tarball
-RUN cd ~/ffmpeg_sources                                                                   && \
-    wget -q -O  opus-1.3.tar.gz https://github.com/xiph/opus/archive/v1.3.tar.gz          && \
-    tar xzvf opus-1.3.tar.gz                                                              && \
-    cd opus-1.3                                                                           && \
-    ./autogen.sh                                                                          && \
-    ./configure --prefix="$HOME/ffmpeg_build" --disable-shared                            && \
-    make                                                                                  && \
+# Compile and install libopus (opus) from tarball
+RUN cd ~/ffmpeg_sources                                                     && \
+    wget -q -O opus.tar.gz ${OPUS_URL}                                      && \
+    tar xzf opus.tar.gz                                                     && \
+    cd opus-*                                                               && \
+    ./autogen.sh                                                            && \
+    ./configure                                                                \
+        --disable-shared                                                    && \
+    make                                                                    && \
     make install
 
-# Compile and install libaom dependency (AV1) from git
-RUN cd ~/ffmpeg_sources                                                                   && \
-    git clone https://aomedia.googlesource.com/aom                                        && \
-    cd aom                                                                                && \
-    git checkout v1.0.0                                                                   && \
-    mkdir ~/ffmpeg_sources/aom_build                                                      && \
-    cd    ~/ffmpeg_sources/aom_build                                                      && \
-    PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DENABLE_TESTS=0 -DENABLE_SHARED=off -DENABLE_NASM=on ../aom && \
-    PATH="$HOME/bin:$PATH" make                                                           && \
+# Compile and install libaom (AV1) from git
+RUN cd ~/ffmpeg_sources                                                     && \
+    git clone ${AOM_URL}                                                    && \
+    cd aom                                                                  && \
+    git checkout v1.0.0                                                     && \
+    mkdir ~/ffmpeg_sources/aom_build                                        && \
+    cd    ~/ffmpeg_sources/aom_build                                        && \
+    cmake                                                                      \
+        -G "Unix Makefiles"                                                    \
+        -DENABLE_TESTS=0                                                       \
+        -DENABLE_SHARED=off                                                    \
+        -DENABLE_NASM=on                                                       \
+        ../aom &&                                                              \
+    make                                                                    && \
     make install
 
-# Compile and install libvpx dependency (VP8-VP9) from git
-RUN cd ~/ffmpeg_sources                                                                   && \
-    git clone https://chromium.googlesource.com/webm/libvpx.git                           && \
-    cd libvpx                                                                             && \
-    git checkout v1.7.0                                                                   && \
-    PATH="$HOME/bin:$PATH" ./configure --prefix="$HOME/ffmpeg_build" --disable-examples --disable-unit-tests --enable-vp9-highbitdepth --as=yasm && \
-    PATH="$HOME/bin:$PATH" make                                                           && \
+# Compile and install libvpx (VP8-VP9) from git
+RUN cd ~/ffmpeg_sources                                                     && \
+    git clone ${VPX_URL}                                                    && \
+    cd libvpx                                                               && \
+    git checkout v1.7.0                                                     && \
+    ./configure                                                                \
+        --disable-examples                                                     \
+        --disable-unit-tests                                                   \
+        --enable-vp9-highbitdepth                                              \
+        --as=yasm                                                           && \
+    make                                                                    && \
     make install
 
 # Compile and install libx264 (H264 / AVC) from git
-RUN cd ~/ffmpeg_sources                                                                   && \
-    git clone https://code.videolan.org/videolan/x264.git                                 && \
-    cd x264                                                                               && \
-    git checkout stable                                                                   && \
-    PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" --enable-static --enable-pic && \
-    PATH="$HOME/bin:$PATH" make                                                           && \
+RUN cd ~/ffmpeg_sources                                                     && \
+    git clone ${X264_URL}                                                   && \
+    cd x264                                                                 && \
+    git checkout stable                                                     && \
+    ./configure                                                                \
+        --enable-static                                                        \
+        --enable-pic                                                        && \
+    make                                                                    && \
     make install
 
 # Compile and install libx265 (H265 / HEVC) from tarball
-RUN cd ~/ffmpeg_sources                                                                   && \
-    wget -q -O  x265.tar.gz https://bitbucket.org/multicoreware/x265/downloads/x265_3.2.1.tar.gz && \
-    tar xzvf x265.tar.gz                                                                  && \
-    cd x265_*/build/linux                                                                 && \
-    PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DENABLE_SHARED=off -DHIGH_BIT_DEPTH=ON ../../source && \
-    PATH="$HOME/bin:$PATH" make                                                           && \
-    make install
+COPY multilib.sh /tmp
+RUN cd ~/ffmpeg_sources                                                     && \
+    wget -q -O  x265.tar.gz ${X265_URL}                                     && \
+    tar xzf x265.tar.gz                                                     && \
+    cd x265_*/build/linux                                                   && \
+    mv /tmp/multilib.sh . && chmod u+x multilib.sh && ./multilib.sh         && \
+    make --directory=8bit install
 
 # Compile and install ffmpeg from tarball
-RUN cd ~/ffmpeg_sources                                                                   && \
-    wget -q -O ffmpeg.tar.bz2 https://ffmpeg.org/releases/ffmpeg-4.2.1.tar.bz2            && \
-    tar xjvf ffmpeg.tar.bz2                                                               && \
-    cd ffmpeg-4.2.1                                                                       && \
-    PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure    \
-        --prefix="$HOME/ffmpeg_build"                                                        \
-        --pkg-config-flags="--static"                                                        \
-        --extra-cflags="-I$HOME/ffmpeg_build/include"                                        \
-        --extra-ldflags="-L$HOME/ffmpeg_build/lib"                                           \
-        --extra-libs="-lpthread -lm"                                                         \
-        --bindir="$HOME/bin"                                                                 \
-        --enable-gpl                                                                         \
-        --enable-libopus                                                                     \
-        --enable-libaom                                                                      \
-        --enable-libvpx                                                                      \
-        --enable-libx264                                                                     \
-        --enable-libx265                                                                     \
-        --enable-libzimg                                                                  && \
-    PATH="$HOME/bin:$PATH" make                                                           && \
+# Default install is '/usr/local/bin/ffmpeg'
+RUN cd ~/ffmpeg_sources                                                     && \
+    wget -q -O ffmpeg.tar.bz2 ${FFMPEG_URL}                                 && \
+    tar xjf ffmpeg.tar.bz2                                                  && \
+    cd ffmpeg-*                                                             && \
+    ./configure                                                                \
+        --pkg-config-flags="--static"                                          \
+        --extra-libs="-lpthread -lm"                                           \
+        --enable-gpl                                                           \
+        --enable-libopus                                                       \
+        --enable-libaom                                                        \
+        --enable-libvpx                                                        \
+        --enable-libx264                                                       \
+        --enable-libx265                                                       \
+        --enable-libzimg                                                    && \
+    make                                                                    && \
     make install
 
-# Install ffmpeg binary under /usr/local/bin
-RUN cp ~/bin/ffmpeg  /usr/local/bin
-
 # ==============================================================================
-# /!\ RELEASE ONLY /!\
+# /!\ RELEASE STAGE ONLY /!\
 # 
 # Just copy ffmpeg binary previously builded from "build" image
 # ==============================================================================
-FROM base as release
+FROM ubuntu:18.04
 
 # Copy ffmpeg binary to /usr/local/bin
-COPY --from=build /usr/local/bin/ffmpeg /usr/local/bin/ffmpeg
+COPY --from=builder /usr/local/bin/ffmpeg /usr/local/bin/ffmpeg

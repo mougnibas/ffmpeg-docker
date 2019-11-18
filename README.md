@@ -42,8 +42,8 @@ It also provide the following external ones :
 libopus          1.3
 libaom           1.0
 libvpx           1.7
-libx264          stable (r2945 72db437)
-libx265          3.2.1
+libx264          stable (34c06d1c / 2019.07.12)
+libx265          3.2.1  (8bit/10bit/12bit multidepth library)
 libzimg (zscale) 2.9.2
 ```
 
@@ -56,7 +56,7 @@ Source encoding is UTF-8 (without BOM) with "LF" (unix) end of line characters.
 ## Requirements
 
 * git client
-* Docker 19.03.04 (or higher)
+* Docker 19.03.05 (or higher)
 
 ## Source clone
 
@@ -66,12 +66,5 @@ Source encoding is UTF-8 (without BOM) with "LF" (unix) end of line characters.
 
 ```
 cd ffmpeg-docker
-docker build src/main/docker/
+docker image build --tag mougnibas/ffmpeg:latest src/main/docker/
 ```
-
-# Usage
-
-
-## TODO
-
-TODO
