@@ -45,6 +45,7 @@ libvpx           1.7
 libx264          stable (34c06d1c / 2019.07.12)
 libx265          3.2.1  (8bit/10bit/12bit multidepth library)
 libzimg (zscale) 2.9.2
+libvmaf          1.3.15
 ```
 
 ## Misc
