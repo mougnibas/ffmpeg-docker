@@ -115,7 +115,7 @@ ffmpeg                                                                         \
   -x264-params level-idc=4.1:colorprim=bt709:transfer=bt709:colormatrix=bt709:fullrange=off  \
                                                                                \
   -codec:a aac                                                                 \
-  -b:a:0 384k -filter:a:1 aformat=channel_layouts="5.1"                        \
+  -b:a:0 384k -filter:a:0 aformat=channel_layouts="5.1"                        \
   -b:a:1 384k -filter:a:1 aformat=channel_layouts="5.1"                        \
   -aac_coder twoloop                                                           \
   -profile:a aac_low                                                           \
