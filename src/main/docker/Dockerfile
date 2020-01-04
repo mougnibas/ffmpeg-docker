@@ -1,4 +1,4 @@
-# (c) Copyright 2018 Yoann MOUGNIBAS
+# (c) Copyright 2018-2020 Yoann MOUGNIBAS
 #
 # This file is part of ffmpeg-docker.
 #
@@ -36,16 +36,19 @@
 # ==============================================================================
 FROM ubuntu:18.04 AS builder
 
-# Set library URLs
+# Set library URLs and versions
 ARG NASM_URL=https://www.nasm.us/pub/nasm/releasebuilds/2.13.03/nasm-2.13.03.tar.bz2
 ARG ZIMG_URL=https://github.com/sekrit-twc/zimg/archive/release-2.9.2.tar.gz
-ARG OPUS_URL=https://github.com/xiph/opus/archive/v1.3.tar.gz
+ARG OPUS_URL=https://github.com/xiph/opus/archive/v1.3.1.tar.gz
 ARG AOM_URL=https://aomedia.googlesource.com/aom
+ARG AOM_TAG=v1.0.0-errata1-avif
 ARG VPX_URL=https://chromium.googlesource.com/webm/libvpx.git
+ARG VPX_TAG=v1.8.2
 ARG X264_URL=https://code.videolan.org/videolan/x264.git
+ARG X264_COMMIT=1771b556
 ARG X265_URL=https://bitbucket.org/multicoreware/x265/downloads/x265_3.2.1.tar.gz
 ARG VMAF_URL=https://github.com/Netflix/vmaf/archive/v1.3.15.tar.gz
-ARG FFMPEG_URL=https://ffmpeg.org/releases/ffmpeg-4.2.1.tar.bz2
+ARG FFMPEG_URL=https://ffmpeg.org/releases/ffmpeg-4.2.2.tar.bz2
 
 # "Server" install without ffplay. Omit some dependencies.
 RUN apt-get update                                                          && \
@@ -104,7 +107,7 @@ RUN cd ~/ffmpeg_sources                                                     && \
 RUN cd ~/ffmpeg_sources                                                     && \
     git clone ${AOM_URL}                                                    && \
     cd aom                                                                  && \
-    git checkout v1.0.0                                                     && \
+    git checkout ${AOM_TAG}                                                 && \
     mkdir ~/ffmpeg_sources/aom_build                                        && \
     cd    ~/ffmpeg_sources/aom_build                                        && \
     cmake                                                                      \
@@ -120,7 +123,7 @@ RUN cd ~/ffmpeg_sources                                                     && \
 RUN cd ~/ffmpeg_sources                                                     && \
     git clone ${VPX_URL}                                                    && \
     cd libvpx                                                               && \
-    git checkout v1.7.0                                                     && \
+    git checkout ${VPX_TAG}                                                 && \
     ./configure                                                                \
         --disable-examples                                                     \
         --disable-unit-tests                                                   \
@@ -133,7 +136,7 @@ RUN cd ~/ffmpeg_sources                                                     && \
 RUN cd ~/ffmpeg_sources                                                     && \
     git clone ${X264_URL}                                                   && \
     cd x264                                                                 && \
-    git checkout stable                                                     && \
+    git checkout ${X264_COMMIT}                                             && \
     ./configure                                                                \
         --enable-static                                                        \
         --enable-pic                                                        && \
@@ -168,14 +171,14 @@ RUN cd ~/ffmpeg_sources                                                     && \
         --pkg-config-flags="--static"                                          \
         --extra-libs="-lpthread -lm"                                           \
         --enable-gpl                                                           \
+        --enable-version3                                                      \
         --enable-libopus                                                       \
         --enable-libaom                                                        \
         --enable-libvpx                                                        \
         --enable-libx264                                                       \
         --enable-libx265                                                       \
         --enable-libzimg                                                       \
-        --enable-libvmaf                                                       \
-        --enable-version3                                                   && \
+        --enable-libvmaf                                                    && \
     make                                                                    && \
     make install
 
