@@ -42,10 +42,10 @@ It also provide the following external ones :
 libopus              1.3.1               (2019-04-13)
 libaom               v1.0.0-errata1-avif (2019-12-12)
 libvpx               1.8.2               (2019-12-19)
-libx264              1771b556            (2019-11-25)
-libx265 (8/10/12bit) 3.2.1               (2019-10-22)
-libzimg (zscale)     2.9.2               (2019-07-31)
-libvmaf              1.3.15              (2019-09-08)
+libx264              296494a4            (2020-04-05)
+libx265 (8/10/12bit) 3.3                 (2020-02-17)
+libzimg (zscale)     2.9.3               (2020-03-02)
+libvmaf              1.5.1               (2020-02-28)
 ```
 
 ## Misc
