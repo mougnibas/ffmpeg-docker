@@ -34,23 +34,26 @@
 # Don't optimize layer count or layer size here.
 # Focus on maintenability.
 # ==============================================================================
-FROM ubuntu:18.04 AS builder
+FROM ubuntu:20.04 AS builder
 
 # Set library URLs and versions
-ARG NASM_URL=https://www.nasm.us/pub/nasm/releasebuilds/2.13.03/nasm-2.13.03.tar.bz2
-ARG ZIMG_URL=https://github.com/sekrit-twc/zimg/archive/release-2.9.2.tar.gz
+ARG NASM_URL=https://www.nasm.us/pub/nasm/releasebuilds/2.14.02/nasm-2.14.02.tar.bz2
+ARG ZIMG_URL=https://github.com/sekrit-twc/zimg/archive/release-2.9.3.tar.gz
 ARG OPUS_URL=https://github.com/xiph/opus/archive/v1.3.1.tar.gz
 ARG AOM_URL=https://aomedia.googlesource.com/aom
 ARG AOM_TAG=v1.0.0-errata1-avif
 ARG VPX_URL=https://chromium.googlesource.com/webm/libvpx.git
 ARG VPX_TAG=v1.8.2
 ARG X264_URL=https://code.videolan.org/videolan/x264.git
-ARG X264_COMMIT=1771b556
-ARG X265_URL=https://bitbucket.org/multicoreware/x265/downloads/x265_3.2.1.tar.gz
-ARG VMAF_URL=https://github.com/Netflix/vmaf/archive/v1.3.15.tar.gz
+ARG X264_COMMIT=296494a4
+ARG X265_URL=https://bitbucket.org/multicoreware/x265/downloads/x265_3.3.tar.gz
+ARG VMAF_URL=https://github.com/Netflix/vmaf/archive/v1.5.1.tar.gz
 ARG FFMPEG_URL=https://ffmpeg.org/releases/ffmpeg-4.2.2.tar.bz2
 
-# "Server" install without ffplay. Omit some dependencies.
+# tzdata installation hack
+ARG DEBIAN_FRONTEND=noninteractive
+
+# Install "generic" build related tools
 RUN apt-get update                                                          && \
     apt-get -y install                                                         \
         autoconf                                                               \
@@ -63,6 +66,16 @@ RUN apt-get update                                                          && \
         texinfo                                                                \
         wget                                                                   \
         zlib1g-dev
+
+# Install VMAF build related tools
+RUN apt-get update                                                          && \
+    apt-get -y install                                                         \
+        python3                                                                \
+        python3-pip                                                            \
+        python3-setuptools                                                     \
+        python3-wheel                                                          \
+        ninja-build doxygen                                                 && \
+    pip3 install --user meson
 
 # Put source directory to home directory
 RUN mkdir -p ~/ffmpeg_sources ~/bin
@@ -153,13 +166,16 @@ RUN cd ~/ffmpeg_sources                                                     && \
     make --directory=8bit install
 
 # Compile and install libvmaf from tarball
+# export ".local/bin" PATH is about "meson" tool
 RUN cd ~/ffmpeg_sources                                                     && \
     wget -q -O vmaf.tar.gz ${VMAF_URL}                                      && \
     tar xzf vmaf.tar.gz                                                     && \
     cd vmaf-*                                                               && \
-    cd ptools     && make                                                   && \
-    cd ../wrapper && make                                                   && \
-    cd ../        && make install
+    cd libvmaf                                                              && \
+    export PATH="$PATH:$HOME/.local/bin"                                    && \
+    meson build --buildtype release                                         && \
+    ninja -vC build                                                         && \
+    ninja -vC build install
 
 # Compile and install ffmpeg from tarball
 # Default install is '/usr/local/bin/ffmpeg'
@@ -187,7 +203,7 @@ RUN cd ~/ffmpeg_sources                                                     && \
 # 
 # Just copy ffmpeg binary previously builded from "build" image
 # ==============================================================================
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 # Copy VMAF models
 COPY --from=builder /usr/local/share/model /usr/local/share/model
