@@ -208,5 +208,8 @@ FROM ubuntu:20.04
 # Copy VMAF models
 COPY --from=builder /usr/local/share/model /usr/local/share/model
 
+# Copy VMAF shared lib (new requirement detected on v1.5.1)
+COPY --from=builder /usr/local/lib/x86_64-linux-gnu/libvmaf.so /lib/x86_64-linux-gnu/libvmaf.so
+
 # Copy ffmpeg binary to /usr/local/bin
 COPY --from=builder /usr/local/bin/ffmpeg /usr/local/bin/ffmpeg
