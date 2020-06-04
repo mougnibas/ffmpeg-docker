@@ -40,7 +40,7 @@ It also provide the following external ones :
 
 ```
 libopus              1.3.1               (2019-04-13)
-libaom               v1.0.0-errata1-avif (2019-12-12)
+libaom               v2.0.0              (2020-05-18)
 libvpx               1.8.2               (2019-12-19)
 libx264              296494a4            (2020-04-05)
 libx265 (8/10/12bit) 3.3                 (2020-02-17)
