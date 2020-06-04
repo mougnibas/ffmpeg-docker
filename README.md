@@ -23,7 +23,7 @@ along with ffmpeg-docker. If not, see <http://www.gnu.org/licenses/>
 
 The purpose of this project is to provide ffmpeg onto docker.
 
-ffmpeg release is 4.2.2 'Ada', released 2019-12-31, with the following 'native' library versions :
+ffmpeg release is 4.2.3 'Ada', released 2020-05-21, with the following 'native' library versions :
 
 ```
 libavutil      56. 31.100
@@ -78,7 +78,7 @@ cd /mnt/encode
   1. Other subtitle 1
   1. Other subtitle 1
 1. Adjust `-disposition` according to the previously mapped streams
-1. Adjust `-b:a:1` according to the previously mapped audio streams (delete / keep the linge)
+1. Adjust `-b:a:1` according to the previously mapped audio streams (delete / keep the line)
 1. Adjust `-b:a` bitrate according to the number of channels
   1. stereo (2 channels) : 128 kb/s
   1. 5.1    (6 channels) : 384 kb/s
