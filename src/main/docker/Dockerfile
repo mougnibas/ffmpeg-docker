@@ -41,14 +41,14 @@ ARG NASM_URL=https://www.nasm.us/pub/nasm/releasebuilds/2.14.02/nasm-2.14.02.tar
 ARG ZIMG_URL=https://github.com/sekrit-twc/zimg/archive/release-2.9.3.tar.gz
 ARG OPUS_URL=https://github.com/xiph/opus/archive/v1.3.1.tar.gz
 ARG AOM_URL=https://aomedia.googlesource.com/aom
-ARG AOM_TAG=v1.0.0-errata1-avif
+ARG AOM_TAG=v2.0.0
 ARG VPX_URL=https://chromium.googlesource.com/webm/libvpx.git
 ARG VPX_TAG=v1.8.2
 ARG X264_URL=https://code.videolan.org/videolan/x264.git
 ARG X264_COMMIT=296494a4
 ARG X265_URL=https://bitbucket.org/multicoreware/x265/downloads/x265_3.3.tar.gz
 ARG VMAF_URL=https://github.com/Netflix/vmaf/archive/v1.5.1.tar.gz
-ARG FFMPEG_URL=https://ffmpeg.org/releases/ffmpeg-4.2.2.tar.bz2
+ARG FFMPEG_URL=https://ffmpeg.org/releases/ffmpeg-4.2.3.tar.bz2
 
 # tzdata installation hack
 ARG DEBIAN_FRONTEND=noninteractive
