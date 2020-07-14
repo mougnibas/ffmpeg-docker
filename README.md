@@ -21,17 +21,17 @@ along with ffmpeg-docker. If not, see <http://www.gnu.org/licenses/>
 
 The purpose of this project is to provide ffmpeg onto docker.
 
-ffmpeg release is 4.2.3 'Ada', released 2020-05-21, with the following 'native' library versions :
+ffmpeg release is 4.3.1 '4:3', released 2020-07-11, with the following 'native' library versions :
 
 ```
-libavutil      56. 31.100
-libavcodec     58. 54.100
-libavformat    58. 29.100
-libavdevice    58.  8.100
-libavfilter     7. 57.100
-libswscale      5.  5.100
-libswresample   3.  5.100
-libpostproc    55.  5.100
+libavutil      56. 51.100
+libavcodec     58. 91.100
+libavformat    58. 45.100
+libavdevice    58. 10.100
+libavfilter     7. 85.100
+libswscale      5.  7.100
+libswresample   3.  7.100
+libpostproc    55.  7.100
 ```
 
 It also provide the following external ones :

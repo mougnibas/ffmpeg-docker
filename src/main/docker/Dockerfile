@@ -48,7 +48,7 @@ ARG X264_URL=https://code.videolan.org/videolan/x264.git
 ARG X264_COMMIT=296494a4
 ARG X265_URL=https://bitbucket.org/multicoreware/x265/downloads/x265_3.3.tar.gz
 ARG VMAF_URL=https://github.com/Netflix/vmaf/archive/v1.5.1.tar.gz
-ARG FFMPEG_URL=https://ffmpeg.org/releases/ffmpeg-4.2.3.tar.bz2
+ARG FFMPEG_URL=https://ffmpeg.org/releases/ffmpeg-4.3.1.tar.bz2
 
 # tzdata installation hack
 ARG DEBIAN_FRONTEND=noninteractive
