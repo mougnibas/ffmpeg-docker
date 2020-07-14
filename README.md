@@ -145,7 +145,7 @@ ffmpeg                                                                         \
   -metadata:s:s:2 language=eng                                                 \
                                                                                \
   -codec:v libx264 -pix_fmt yuv420p                                            \
-  -crf 21 -maxrate 16M -bufsize 64M -preset medium                             \
+  -crf 21 -maxrate 16M -bufsize 78125K -preset medium                          \
   -profile:v high                                                              \
   -x264-params level-idc=4.1:colorprim=bt709:transfer=bt709:colormatrix=bt709:fullrange=off  \
                                                                                \
