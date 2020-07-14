@@ -17,9 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ffmpeg-docker. If not, see <http://www.gnu.org/licenses/>
 ```
 
-# Project informations
-
-## General
+# General
 
 The purpose of this project is to provide ffmpeg onto docker.
 
@@ -48,23 +46,60 @@ libzimg (zscale)     2.9.3               (2020-03-02)
 libvmaf              1.5.1               (2020-02-28)
 ```
 
-## Misc
+# For developers
 
-Source encoding is UTF-8 (without BOM) with "LF" (unix) end of line characters.
+## Project link
 
-# Usage (advanced)
+* Public project repository : https://github.com/mougnibas/ffmpeg-docker
+
+## Sources convention
+
+* "LF" line ending (Unix)
+* UTF-8 (without BOM)
+
+## Requirements
+
+* git 2.27.0 (2020-01-01)
+* Docker Engine 19.03.08 (Docker Desktop for Windows, 2020-03-10), or Docker Engine Engine 19.03.11 (2020-06-01)
+
+## Project import
+
+* From Visual Studio Code, open Workspace file `project.code-workspace`
+* Install recommended extensions
+
+## Application lifecycle instructions
+
+### Clean
+
+`Terminal / Run Task / clean`
+
+```
+cd ffmpeg-docker
+docker image rm mougnibas/ffmpeg:latest
+```
+
+### Build
+
+`Terminal / Run Build Task`
+
+```
+cd ffmpeg-docker
+docker image build --tag mougnibas/ffmpeg:latest src/main/docker/
+```
+
+# For end users
 
 ## Create from a linux host
 
 ```
-docker run --rm -it --name ffmpeg -v /path/to/video:/mnt/encode   mougnibas/ffmpeg
+docker run --rm -it --name ffmpeg --hostname ffmpeg -v /path/to/video:/mnt/encode   mougnibas/ffmpeg
 cd /mnt/encode
 ```
 
 ## Create from a windows host
 
 ```
-docker run --rm -it --name ffmpeg -v D:/path/to/video:/mnt/encode mougnibas/ffmpeg
+docker run --rm -it --name ffmpeg --hostname ffmpeg -v D:/path/to/video:/mnt/encode mougnibas/ffmpeg
 cd /mnt/encode
 ```
 
@@ -128,21 +163,3 @@ ffmpeg                                                                         \
 ## VMAF score
 
 `ffmpeg -i reference.mkv -i transcoded.mkv -filter_complex libvmaf -f null -`
-
-# Build
-
-## Requirements
-
-* git client
-* Docker 19.03.05 (or higher)
-
-## Source clone
-
-`git clone https://github.com/mougnibas/ffmpeg-docker.git`
-
-## Docker build
-
-```
-cd ffmpeg-docker
-docker image build --tag mougnibas/ffmpeg:latest src/main/docker/
-```
