@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"name": "ffmpeg-docker",
+			"path": "."
+		}
+	],
+	"extensions": {
+		"recommendations": [
+			"vscode-icons-team.vscode-icons",
+			"github.vscode-pull-request-github",
+			"ms-azuretools.vscode-docker"
+		]
+	},
+	"settings": {
+		"task.problemMatchers.neverPrompt": true
+	}
+}

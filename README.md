@@ -17,23 +17,21 @@ You should have received a copy of the GNU General Public License
 along with ffmpeg-docker. If not, see <http://www.gnu.org/licenses/>
 ```
 
-# Project informations
-
-## General
+# General
 
 The purpose of this project is to provide ffmpeg onto docker.
 
-ffmpeg release is 4.2.3 'Ada', released 2020-05-21, with the following 'native' library versions :
+ffmpeg release is 4.3.1 '4:3', released 2020-07-11, with the following 'native' library versions :
 
 ```
-libavutil      56. 31.100
-libavcodec     58. 54.100
-libavformat    58. 29.100
-libavdevice    58.  8.100
-libavfilter     7. 57.100
-libswscale      5.  5.100
-libswresample   3.  5.100
-libpostproc    55.  5.100
+libavutil      56. 51.100
+libavcodec     58. 91.100
+libavformat    58. 45.100
+libavdevice    58. 10.100
+libavfilter     7. 85.100
+libswscale      5.  7.100
+libswresample   3.  7.100
+libpostproc    55.  7.100
 ```
 
 It also provide the following external ones :
@@ -48,23 +46,60 @@ libzimg (zscale)     2.9.3               (2020-03-02)
 libvmaf              1.5.1               (2020-02-28)
 ```
 
-## Misc
+# For developers
 
-Source encoding is UTF-8 (without BOM) with "LF" (unix) end of line characters.
+## Project link
 
-# Usage (advanced)
+* Public project repository : https://github.com/mougnibas/ffmpeg-docker
+
+## Sources convention
+
+* "LF" line ending (Unix)
+* UTF-8 (without BOM)
+
+## Requirements
+
+* git 2.27.0 (2020-01-01)
+* Docker Engine 19.03.08 (Docker Desktop for Windows, 2020-03-10), or Docker Engine Engine 19.03.11 (2020-06-01)
+
+## Project import
+
+* From Visual Studio Code, open Workspace file `project.code-workspace`
+* Install recommended extensions
+
+## Application lifecycle instructions
+
+### Clean
+
+`Terminal / Run Task / clean`
+
+```
+cd ffmpeg-docker
+docker image rm mougnibas/ffmpeg:latest
+```
+
+### Build
+
+`Terminal / Run Build Task`
+
+```
+cd ffmpeg-docker
+docker image build --tag mougnibas/ffmpeg:latest src/main/docker/
+```
+
+# For end users
 
 ## Create from a linux host
 
 ```
-docker run --rm -it --name ffmpeg -v /path/to/video:/mnt/encode   mougnibas/ffmpeg
+docker run --rm -it --name ffmpeg --hostname ffmpeg -v /path/to/video:/mnt/encode   mougnibas/ffmpeg
 cd /mnt/encode
 ```
 
 ## Create from a windows host
 
 ```
-docker run --rm -it --name ffmpeg -v D:/path/to/video:/mnt/encode mougnibas/ffmpeg
+docker run --rm -it --name ffmpeg --hostname ffmpeg -v D:/path/to/video:/mnt/encode mougnibas/ffmpeg
 cd /mnt/encode
 ```
 
@@ -110,7 +145,7 @@ ffmpeg                                                                         \
   -metadata:s:s:2 language=eng                                                 \
                                                                                \
   -codec:v libx264 -pix_fmt yuv420p                                            \
-  -crf 21 -maxrate 16M -bufsize 64M -preset medium                             \
+  -crf 21 -maxrate 16M -bufsize 78125K -preset medium                          \
   -profile:v high                                                              \
   -x264-params level-idc=4.1:colorprim=bt709:transfer=bt709:colormatrix=bt709:fullrange=off  \
                                                                                \
@@ -128,21 +163,3 @@ ffmpeg                                                                         \
 ## VMAF score
 
 `ffmpeg -i reference.mkv -i transcoded.mkv -filter_complex libvmaf -f null -`
-
-# Build
-
-## Requirements
-
-* git client
-* Docker 19.03.05 (or higher)
-
-## Source clone
-
-`git clone https://github.com/mougnibas/ffmpeg-docker.git`
-
-## Docker build
-
-```
-cd ffmpeg-docker
-docker image build --tag mougnibas/ffmpeg:latest src/main/docker/
-```

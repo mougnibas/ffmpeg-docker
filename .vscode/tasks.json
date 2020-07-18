@@ -1,0 +1,24 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "clean",
+            "type": "shell",
+            "command": "docker image rm --force mougnibas/ffmpeg:latest",
+        },
+        {
+            "label": "build",
+            "type": "shell",
+            "windows" : {
+                "command": "docker image build --tag mougnibas/ffmpeg:latest ${workspaceFolder}\\src\\main\\docker\\"
+            },
+            "linux" : {
+                "command": "docker image build --tag mougnibas/ffmpeg:latest ${workspaceFolder}/src/main/docker/"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}
