@@ -131,12 +131,9 @@ ffmpeg                                                                         \
   -map 0:5 -map 0:4 -map 0:3                                                   \
                                                                                \
   -map_metadata -1                                                             \
-  -disposition:v:0 default                                                     \
-  -disposition:a:0 default                                                     \
-  -disposition:a:1 0                                                           \
-  -disposition:s:0 forced                                                      \
-  -disposition:s:1 0                                                           \
-  -disposition:s:2 0                                                           \
+  -disposition 0                                                               \
+  -default_mode infer_no_subs                                                  \
+  -reserve_index_space 512k                                                    \
                                                                                \
   -metadata:s:a:0 language=fre                                                 \
   -metadata:s:a:1 language=eng                                                 \
