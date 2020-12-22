@@ -38,12 +38,12 @@ It also provide the following external ones :
 
 ```
 libopus              1.3.1               (2019-04-13)
-libaom               v2.0.0              (2020-05-18)
-libvpx               1.8.2               (2019-12-19)
-libx264              296494a4            (2020-04-05)
-libx265 (8/10/12bit) 3.3                 (2020-02-17)
-libzimg (zscale)     2.9.3               (2020-03-02)
-libvmaf              1.5.1               (2020-02-28)
+libaom               2.0.1               (2020-11-25)
+libvpx               1.9.0               (2020-07-30)
+libx264              4121277b            (2020-10-26)
+libx265 (8/10/12bit) 3.4                 (2020-05-29)
+libzimg (zscale)     3.0.1               (2020-08-23)
+libvmaf              1.5.3               (2020-08-25)
 ```
 
 # For developers
