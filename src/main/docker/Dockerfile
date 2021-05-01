@@ -107,7 +107,7 @@ RUN cd ~/ffmpeg_sources                                                     && \
 
 # Compile and install libaom (AV1) from git
 ARG AOM_URL=https://aomedia.googlesource.com/aom
-ARG AOM_TAG=v2.0.1
+ARG AOM_TAG=v3.0.0
 RUN cd ~/ffmpeg_sources                                                     && \
     git clone ${AOM_URL}                                                    && \
     cd aom                                                                  && \
@@ -125,7 +125,7 @@ RUN cd ~/ffmpeg_sources                                                     && \
 
 # Compile and install libvpx (VP8-VP9) from git
 ARG VPX_URL=https://chromium.googlesource.com/webm/libvpx.git
-ARG VPX_TAG=v1.9.0
+ARG VPX_TAG=v1.10.0
 RUN cd ~/ffmpeg_sources                                                     && \
     git clone ${VPX_URL}                                                    && \
     cd libvpx                                                               && \
@@ -152,12 +152,12 @@ RUN cd ~/ffmpeg_sources                                                     && \
     make install
 
 # Compile and install libx265 (H265 / HEVC) from tarball
-ARG X265_URL=https://bitbucket.org/multicoreware/x265_git/get/3.4.tar.gz
+ARG X265_URL=https://bitbucket.org/multicoreware/x265_git/downloads/x265_3.5.tar.gz
 COPY multilib.sh /tmp
 RUN cd ~/ffmpeg_sources                                                     && \
     wget -q -O  x265.tar.gz ${X265_URL}                                     && \
     tar xzf     x265.tar.gz                                                 && \
-    cd multicoreware-x265_git-*/build/linux                                 && \
+    cd x265_*/build/linux                                                   && \
     mv /tmp/multilib.sh . && chmod u+x multilib.sh && ./multilib.sh         && \
     make --directory=8bit install
 
@@ -178,7 +178,7 @@ RUN cd ~/ffmpeg_sources                                                     && \
 
 # Compile and install ffmpeg from tarball
 # Default install is '/usr/local/bin/ffmpeg'
-ARG FFMPEG_URL=https://ffmpeg.org/releases/ffmpeg-4.3.1.tar.bz2
+ARG FFMPEG_URL=https://ffmpeg.org/releases/ffmpeg-4.4.tar.bz2
 RUN cd ~/ffmpeg_sources                                                     && \
     wget -q -O ffmpeg.tar.bz2 ${FFMPEG_URL}                                 && \
     tar xjf ffmpeg.tar.bz2                                                  && \
@@ -213,3 +213,6 @@ COPY --from=builder /usr/local/lib/x86_64-linux-gnu/libvmaf.so.0.0.0 /lib/x86_64
 
 # Copy ffmpeg binary to /usr/local/bin
 COPY --from=builder /usr/local/bin/ffmpeg /usr/local/bin/ffmpeg
+
+# Go to this working directory
+WORKDIR /mnt/encode
