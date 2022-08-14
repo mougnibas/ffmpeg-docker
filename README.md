@@ -21,29 +21,29 @@ along with ffmpeg-docker. If not, see <http://www.gnu.org/licenses/>
 
 The purpose of this project is to provide ffmpeg onto docker.
 
-ffmpeg release is 4.4 'Rao', released 2021-04-08, with the following 'native' library versions :
+ffmpeg release is 5.1 'Riemann', released 2022-07-22, with the following 'native' library versions :
 
 ```
-libavutil      56. 70.100
-libavcodec     58.134.100
-libavformat    58. 76.100
-libavdevice    58. 13.100
-libavfilter     7.110.100
-libswscale      5.  9.100
-libswresample   3.  9.100
-libpostproc    55.  9.100
+libavutil      57. 28.100
+libavcodec     59. 37.100
+libavformat    59. 27.100
+libavdevice    59.  7.100
+libavfilter     8. 44.100
+libswscale      6.  7.100
+libswresample   4.  7.100
+libpostproc    56.  6.100
 ```
 
 It also provide the following external ones :
 
 ```
 libopus              1.3.1               (2019-04-13)
-libaom               3.0.0               (2021-03-23)
-libvpx               1.10.0              (2021-03-25)
-libx264              55d517bc            (2021-04-12)
+libaom               3.4.0               (2022-06-17)
+libvpx               1.12.0              (2022-09-28)
+libx264              baee400f            (2022-06-02)
 libx265 (8/10/12bit) 3.5                 (2021-03-19)
-libzimg (zscale)     3.0.1               (2020-08-23)
-libvmaf              1.5.3               (2020-08-25)
+libzimg (zscale)     3.0.4               (2022-04-20)
+libvmaf              2.3.1               (2022-04-11)
 ```
 
 # For developers
