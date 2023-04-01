@@ -37,7 +37,7 @@ libpostproc    56.  6.100
 It also provide the following external ones :
 
 ```
-libx265 (8/10/12bit) 3.5                 (2021-03-19)
+libx265 (8bit)       3.5                 (2021-03-19)
 libvmaf              2.3.1               (2022-04-11)
 ```
 
@@ -73,13 +73,22 @@ cd ffmpeg-docker
 docker image rm mougnibas/ffmpeg:latest
 ```
 
-### Build
+### Build (arm64)
 
 `Terminal / Run Build Task`
 
 ```
 cd ffmpeg-docker
 docker image build --platform linux/arm64 --progress plain --tag mougnibas/ffmpeg:latest src/main/docker/
+```
+
+### Build (amd64)
+
+`Terminal / Run Build Task`
+
+```
+cd ffmpeg-docker
+docker image build --platform linux/amd64 --progress plain --tag mougnibas/ffmpeg:latest src/main/docker/
 ```
 
 # For end users
@@ -98,7 +107,7 @@ docker run --rm -it --name ffmpeg --hostname ffmpeg -v D:/path/to/video:/mnt/enc
 cd /mnt/encode
 ```
 
-## HD to H264-AAC
+## HD to HEVC-AAC with VMAF
 
 1. Adjust `-map` to map the reference streams :
   1. Default video
@@ -116,19 +125,26 @@ cd /mnt/encode
 1. Remove `-filter:a aformat=channel_layouts="5.1"` parts only if the stream is not a 5.1 channels.
 
 ```
+!/bin/bash
+
+# Adjust this to get a VMAF score between 96.00 and 96.25
+CRF=23.00
+
+# These variables don't need to be changed
+REFERENCE_FILE="reference.mkv"
+PRESET="slow"
+DISTORDED_FILE="distorded-VMAF-XX.XXXXXX-HEVC-CRF-$CRF-preset-$PRESET-AAC-64kbps-Subs-Chapters.mkv"
+
 ffmpeg                                                                         \
   -y                                                                           \
   -hide_banner                                                                 \
   -i reference.mkv                                                             \
                                                                                \
-  -map 0:0                                                                     \
-  -map 0:2 -map 0:1                                                            \
-  -map 0:5 -map 0:4 -map 0:3                                                   \
+  -map 0:v                                                                     \
+  -map 0:a:0 -map 0:a:1                                                        \
+  -map 0:s:0 -map 0:s:1 -map 0:s:2                                             \
                                                                                \
   -map_metadata -1                                                             \
-  -default_mode infer_no_subs                                                  \
-  -reserve_index_space 512k                                                    \
-                                                                               \
   -disposition:v:0 default                                                     \
   -disposition:a:0 default                                                     \
   -disposition:a:1 0                                                           \
@@ -136,28 +152,53 @@ ffmpeg                                                                         \
   -disposition:s:1 0                                                           \
   -disposition:s:2 0                                                           \
                                                                                \
-  -metadata:s:a:0 language=fre                                                 \
-  -metadata:s:a:1 language=eng                                                 \
-  -metadata:s:s:0 language=fre                                                 \
-  -metadata:s:s:1 language=fre                                                 \
-  -metadata:s:s:2 language=eng                                                 \
+  -metadata:s:v:0 language=eng,title="Video / en_us / HEVC / Level 5.1 / Main / Main tier" \
+  -metadata:s:a:0 language=fre,title="Audio / fr_fr / AAC / 5.1"               \
+  -metadata:s:a:1 language=eng,title="Audio / en_us / AAC / 5.1"               \
+  -metadata:s:s:0 language=fre,title="Subtitle / fr_fr / PGS / forced"         \
+  -metadata:s:s:1 language=fre,title="Subtitle / fr_fr / PGS / regular"        \
+  -metadata:s:s:2 language=eng,title="Subtitle / en_us / PGS / regular"        \
                                                                                \
-  -codec:v libx264 -pix_fmt yuv420p                                            \
-  -crf 21 -maxrate 16M -bufsize 78125K -preset medium                          \
-  -profile:v high                                                              \
-  -x264-params level-idc=4.1:colorprim=bt709:transfer=bt709:colormatrix=bt709:fullrange=off  \
+  -filter:v "format=yuv420p,setfield=prog,setpts=PTS-STARTPTS"                 \
+  -codec:v libx265                                                             \
+  -crf $CRF -maxrate 40000K -bufsize 40000K -preset $PRESET                    \
+  -profile:v main                                                              \
+  -g 240 -keyint_min 24                                                        \
+  -x265-params level-idc=5.1:high-tier=0:colorprim=bt709:transfer=bt709:colormatrix=bt709:range=limited:scenecut=0:open-gop=0:no-sao=1 \
                                                                                \
   -codec:a aac                                                                 \
-  -b:a:0 384k -filter:a:0 aformat=channel_layouts="5.1"                        \
-  -b:a:1 384k -filter:a:1 aformat=channel_layouts="5.1"                        \
-  -aac_coder twoloop                                                           \
+  -aac_coder:a twoloop                                                         \
   -profile:a aac_low                                                           \
+                                                                               \
+  -filter:a:0 "channelmap=map=FL-FL|FR-FR|FC-FC|LFE-LFE|SL-BL|SR-BR,asetpts=PTS-STARTPTS" \
+  -b:a:0 384k                                                                  \
+                                                                               \
+  -filter:a:1 "channelmap=map=FL-FL|FR-FR|FC-FC|LFE-LFE|SL-BL|SR-BR,asetpts=PTS-STARTPTS" \
+  -b:a:1 384k                                                                  \
                                                                                \
   -codec:s copy                                                                \
                                                                                \
-  transcoded-H264-CRF21-16mbits-8bit.mkv
+  -f matroska                                                                  \
+  -default_mode infer_no_subs                                                  \
+  -reserve_index_space 512k                                                    \
+                                                                               \
+  $DISTORDED_FILE                                                           && \
+                                                                               \
+ffmpeg                                                                         \
+                                                                               \
+  -y                                                                           \
+  -hide_banner                                                                 \
+  -i $REFERENCE_FILE                                                           \
+  -i $DISTORDED_FILE                                                           \
+                                                                               \
+  -filter_complex                                                              \
+  '
+   [0:v]                       format=yuv420p,setfield=prog,setpts=PTS-STARTPTS    [video_reference_normalize];
+   [video_reference_normalize] scale=1920x1080:flags=lanczos,settb=expr=1001/24000 [video_reference_vmaf_friendly];
+   [1:v]                       scale=1920x1080:flags=lanczos,settb=expr=1001/24000 [video_distorded_vmaf_friendly];
+   [video_distorded_vmaf_friendly] [video_reference_vmaf_friendly] libvmaf
+  '                                                                            \
+  -f null                                                                      \
+                                                                               \
+  /dev/null
 ```
-
-## VMAF score
-
-`ffmpeg -i reference.mkv -i transcoded.mkv -filter_complex libvmaf -f null -`
