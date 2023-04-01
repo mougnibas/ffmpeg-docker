@@ -84,7 +84,7 @@ docker image rm mougnibas/ffmpeg:latest
 
 ```
 cd ffmpeg-docker
-docker image build --progress plain --tag mougnibas/ffmpeg:latest src/main/docker/
+docker image build --platform linux/arm64 --progress plain --tag mougnibas/ffmpeg:latest src/main/docker/
 ```
 
 # For end users

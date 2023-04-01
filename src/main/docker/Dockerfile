@@ -83,99 +83,98 @@ RUN cd ~/ffmpeg_sources                                                     && \
     make install
 
 # Compile and install libzimg (zscale)
-ARG ZIMG_URL=https://github.com/sekrit-twc/zimg/archive/refs/tags/release-3.0.4.tar.gz
-RUN cd ~/ffmpeg_sources                                                     && \
-    wget -q -O zimg.tar.gz ${ZIMG_URL}                                      && \
-    tar xzf zimg.tar.gz                                                     && \
-    cd zimg-release-*                                                       && \
-    ./autogen.sh                                                            && \
-    ./configure                                                                \
-        --disable-shared                                                       \
-        --enable-static                                                     && \
-    make                                                                    && \
-    make install
+#ARG ZIMG_URL=https://github.com/sekrit-twc/zimg/archive/refs/tags/release-3.0.4.tar.gz
+#RUN cd ~/ffmpeg_sources                                                     && \
+#    wget -q -O zimg.tar.gz ${ZIMG_URL}                                      && \
+#    tar xzf zimg.tar.gz                                                     && \
+#    cd zimg-release-*                                                       && \
+#    ./autogen.sh                                                            && \
+#    ./configure                                                                \
+#        --disable-shared                                                       \
+#        --enable-static                                                     && \
+#    make                                                                    && \
+#    make install
 
 # Compile and install libopus (opus) from tarball
-ARG OPUS_URL=https://github.com/xiph/opus/archive/v1.3.1.tar.gz
-RUN cd ~/ffmpeg_sources                                                     && \
-    wget -q -O opus.tar.gz ${OPUS_URL}                                      && \
-    tar xzf opus.tar.gz                                                     && \
-    cd opus-*                                                               && \
-    ./autogen.sh                                                            && \
-    ./configure                                                                \
-        --disable-shared                                                    && \
-    make                                                                    && \
-    make install
+#ARG OPUS_URL=https://github.com/xiph/opus/archive/v1.3.1.tar.gz
+#RUN cd ~/ffmpeg_sources                                                     && \
+#    wget -q -O opus.tar.gz ${OPUS_URL}                                      && \
+#    tar xzf opus.tar.gz                                                     && \
+#    cd opus-*                                                               && \
+#    ./autogen.sh                                                            && \
+#    ./configure                                                                \
+#        --disable-shared                                                    && \
+#    make                                                                    && \
+#    make install
 
 # Compile and install libaom (AV1) from git
-ARG AOM_URL=https://aomedia.googlesource.com/aom
-ARG AOM_TAG=v3.4.0
-RUN cd ~/ffmpeg_sources                                                     && \
-    git clone ${AOM_URL}                                                    && \
-    cd aom                                                                  && \
-    git checkout ${AOM_TAG}                                                 && \
-    mkdir ~/ffmpeg_sources/aom_build                                        && \
-    cd    ~/ffmpeg_sources/aom_build                                        && \
-    cmake                                                                      \
-        -G "Unix Makefiles"                                                    \
-        -DENABLE_TESTS=0                                                       \
-        -DENABLE_SHARED=off                                                    \
-        -DENABLE_NASM=on                                                       \
-        ../aom &&                                                              \
-    make                                                                    && \
-    make install
+#ARG AOM_URL=https://aomedia.googlesource.com/aom
+#ARG AOM_TAG=v3.4.0
+#RUN cd ~/ffmpeg_sources                                                     && \
+#    git clone ${AOM_URL}                                                    && \
+#    cd aom                                                                  && \
+#    git checkout ${AOM_TAG}                                                 && \
+#    mkdir ~/ffmpeg_sources/aom_build                                        && \
+#    cd    ~/ffmpeg_sources/aom_build                                        && \
+#    cmake                                                                      \
+#        -G "Unix Makefiles"                                                    \
+#        -DENABLE_TESTS=0                                                       \
+#        -DENABLE_SHARED=off                                                    \
+#        -DENABLE_NASM=on                                                       \
+#        ../aom &&                                                              \
+#    make                                                                    && \
+#    make install
 
 # Compile and install libvpx (VP8-VP9) from git
-ARG VPX_URL=https://chromium.googlesource.com/webm/libvpx.git
-ARG VPX_TAG=v1.12.0
-RUN cd ~/ffmpeg_sources                                                     && \
-    git clone ${VPX_URL}                                                    && \
-    cd libvpx                                                               && \
-    git checkout ${VPX_TAG}                                                 && \
-    ./configure                                                                \
-        --disable-examples                                                     \
-        --disable-unit-tests                                                   \
-        --enable-vp9-highbitdepth                                              \
-        --as=yasm                                                           && \
-    make                                                                    && \
-    make install
+#ARG VPX_URL=https://chromium.googlesource.com/webm/libvpx.git
+#ARG VPX_TAG=v1.12.0
+#RUN cd ~/ffmpeg_sources                                                     && \
+#    git clone ${VPX_URL}                                                    && \
+#    cd libvpx                                                               && \
+#    git checkout ${VPX_TAG}                                                 && \
+#    ./configure                                                                \
+#        --disable-examples                                                     \
+#        --disable-unit-tests                                                   \
+#        --enable-vp9-highbitdepth                                              \
+#        --as=yasm                                                           && \
+#    make                                                                    && \
+#    make install
 
 # Compile and install libx264 (H264 / AVC) from git
-ARG X264_URL=https://code.videolan.org/videolan/x264.git
-ARG X264_COMMIT=baee400fa9ced6f5481a728138fed6e867b0ff7f
-RUN cd ~/ffmpeg_sources                                                     && \
-    git clone ${X264_URL}                                                   && \
-    cd x264                                                                 && \
-    git checkout ${X264_COMMIT}                                             && \
-    ./configure                                                                \
-        --enable-static                                                        \
-        --enable-pic                                                        && \
-    make                                                                    && \
-    make install
+#ARG X264_URL=https://code.videolan.org/videolan/x264.git
+#ARG X264_COMMIT=baee400fa9ced6f5481a728138fed6e867b0ff7f
+#RUN cd ~/ffmpeg_sources                                                     && \
+#    git clone ${X264_URL}                                                   && \
+#    cd x264                                                                 && \
+#    git checkout ${X264_COMMIT}                                             && \
+#    ./configure                                                                \
+#        --enable-static                                                        \
+#        --enable-pic                                                        && \
+#    make                                                                    && \
+#    make install
 
 # Compile and install libx265 (H265 / HEVC) from tarball
 ARG X265_URL=https://bitbucket.org/multicoreware/x265_git/downloads/x265_3.5.tar.gz
-COPY multilib.sh /tmp
 RUN cd ~/ffmpeg_sources                                                     && \
     wget -q -O  x265.tar.gz ${X265_URL}                                     && \
     tar xzf     x265.tar.gz                                                 && \
-    cd x265_*/build/linux                                                   && \
-    mv /tmp/multilib.sh . && chmod u+x multilib.sh && ./multilib.sh         && \
-    make --directory=8bit install
+    cd x265_*/build                                                         && \
+    cmake ../source -DENABLE_SHARED=OFF -DENABLE_CLI=OFF                    && \
+    make install
 
-# Compile and install libvmaf from tarball
-ARG VMAF_URL=https://github.com/Netflix/vmaf/archive/refs/tags/v2.3.1.tar.gz
-RUN cd ~/ffmpeg_sources                                                     && \
-    wget -q -O vmaf.tar.gz ${VMAF_URL}                                      && \
-    tar xzf vmaf.tar.gz                                                     && \
-    cd vmaf-*                                                               && \
-    cd libvmaf                                                              && \
-    meson build -Denable_tests=false                                           \
-                -Denable_docs=false                                            \
-                --buildtype=release                                            \
-                --default-library=static                                    && \
-    ninja -vC build                                                         && \
-    ninja -vC build install
+## Compile and install libvmaf from tarball
+#ARG VMAF_URL=https://github.com/Netflix/vmaf/archive/refs/tags/v2.3.1.tar.gz
+#RUN cd ~/ffmpeg_sources                                                     && \
+#    wget -q -O vmaf.tar.gz ${VMAF_URL}                                      && \
+#    tar xzf vmaf.tar.gz                                                     && \
+#    cd vmaf-*                                                               && \
+#    cd libvmaf                                                              && \
+#    meson build -Denable_tests=false                                           \
+#                -Denable_docs=false                                            \
+#                --buildtype=release                                            \
+#                --default-library=static                                    && \
+#    ninja -vC build                                                         && \
+#    ninja -vC build install
 
 # Compile and install ffmpeg from tarball
 # Default install is '/usr/local/bin/ffmpeg'
@@ -191,13 +190,7 @@ RUN cd ~/ffmpeg_sources                                                     && \
         --enable-static                                                        \
         --enable-gpl                                                           \
         --enable-version3                                                      \
-        --enable-libopus                                                       \
-        --enable-libaom                                                        \
-        --enable-libvpx                                                        \
-        --enable-libx264                                                       \
-        --enable-libx265                                                       \
-        --enable-libzimg                                                       \
-        --enable-libvmaf                                                    && \
+        --enable-libx265                                                    && \
     make                                                                    && \
     make install
 
