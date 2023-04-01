@@ -1,5 +1,5 @@
 ```
-© Copyright 2018-2020 Yoann MOUGNIBAS
+© Copyright 2018-2023 Yoann MOUGNIBAS
 
 This file is part of ffmpeg-docker.
 
