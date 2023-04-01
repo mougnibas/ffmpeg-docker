@@ -34,7 +34,7 @@
 # Don't optimize layer count or layer size here.
 # Focus on maintenability.
 # ==============================================================================
-FROM ubuntu:20.04 AS builder
+FROM ubuntu:22.04 AS builder
 
 # tzdata installation hack
 ARG DEBIAN_FRONTEND=noninteractive
@@ -163,18 +163,18 @@ RUN cd ~/ffmpeg_sources                                                     && \
     make install
 
 ## Compile and install libvmaf from tarball
-#ARG VMAF_URL=https://github.com/Netflix/vmaf/archive/refs/tags/v2.3.1.tar.gz
-#RUN cd ~/ffmpeg_sources                                                     && \
-#    wget -q -O vmaf.tar.gz ${VMAF_URL}                                      && \
-#    tar xzf vmaf.tar.gz                                                     && \
-#    cd vmaf-*                                                               && \
-#    cd libvmaf                                                              && \
-#    meson build -Denable_tests=false                                           \
-#                -Denable_docs=false                                            \
-#                --buildtype=release                                            \
-#                --default-library=static                                    && \
-#    ninja -vC build                                                         && \
-#    ninja -vC build install
+ARG VMAF_URL=https://github.com/Netflix/vmaf/archive/refs/tags/v2.3.1.tar.gz
+RUN cd ~/ffmpeg_sources                                                     && \
+    wget -q -O vmaf.tar.gz ${VMAF_URL}                                      && \
+    tar xzf vmaf.tar.gz                                                     && \
+    cd vmaf-*                                                               && \
+    cd libvmaf                                                              && \
+    meson build -Denable_tests=false                                           \
+                -Denable_docs=false                                            \
+                --buildtype=release                                            \
+                --default-library=static                                    && \
+    ninja -vC build                                                         && \
+    ninja -vC build install
 
 # Compile and install ffmpeg from tarball
 # Default install is '/usr/local/bin/ffmpeg'
@@ -190,7 +190,8 @@ RUN cd ~/ffmpeg_sources                                                     && \
         --enable-static                                                        \
         --enable-gpl                                                           \
         --enable-version3                                                      \
-        --enable-libx265                                                    && \
+        --enable-libx265                                                       \
+        --enable-libvmaf                                                    && \
     make                                                                    && \
     make install
 
@@ -199,7 +200,7 @@ RUN cd ~/ffmpeg_sources                                                     && \
 # 
 # Just copy ffmpeg binary previously builded from "build" image
 # ==============================================================================
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 # Copy ffmpeg binary to /usr/local/bin
 COPY --from=builder /usr/local/bin/ffmpeg /usr/local/bin/ffmpeg

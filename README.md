@@ -37,12 +37,7 @@ libpostproc    56.  6.100
 It also provide the following external ones :
 
 ```
-libopus              1.3.1               (2019-04-13)
-libaom               3.4.0               (2022-06-17)
-libvpx               1.12.0              (2022-09-28)
-libx264              baee400f            (2022-06-02)
 libx265 (8/10/12bit) 3.5                 (2021-03-19)
-libzimg (zscale)     3.0.4               (2022-04-20)
 libvmaf              2.3.1               (2022-04-11)
 ```
 
@@ -60,7 +55,7 @@ libvmaf              2.3.1               (2022-04-11)
 ## Requirements
 
 * git 2.27.0 (2020-01-01)
-* Docker Engine 19.03.08 (Docker Desktop for Windows, 2020-03-10), or Docker Engine Engine 19.03.11 (2020-06-01)
+* Docker Engine 19.03.08 (Docker Desktop for Windows, 2020-03-10), or Docker Engine 19.03.11 (2020-06-01)
 
 ## Project import
 
